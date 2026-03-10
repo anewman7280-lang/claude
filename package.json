@@ -1,0 +1,12 @@
+{
+  "name": "suncoast-senior-living",
+  "version": "1.0.0",
+  "description": "Suncoast Senior Living - Lead generation site connecting families with assisted living facilities",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve . --listen 3000"
+  },
+  "keywords": ["senior-living", "assisted-living", "lead-generation", "ALF"],
+  "license": "UNLICENSED",
+  "private": true
+}
