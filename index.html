@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suncoast Senior Living | Find the Right Assisted Living in Sarasota, FL</title>
+  <meta name="description" content="Find the perfect assisted living community in Sarasota, Florida. Suncoast Senior Living connects families with trusted ALF communities offering personalized care.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">
+        <span class="logo-icon">&#9752;</span>
+        <div class="logo-text">
+          <span class="logo-name">Suncoast Senior Living</span>
+          <span class="logo-tagline">Sarasota's Trusted Senior Care</span>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <button class="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
+        <ul class="nav-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="#communities">Our Communities</a></li>
+          <li><a href="pages/about.html">About Us</a></li>
+          <li><a href="pages/resources.html">Resources</a></li>
+          <li><a href="pages/contact.html">Contact</a></li>
+          <li><a href="#get-help" class="btn btn-nav">Get Help Today</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <h1>Find the Right Assisted Living Community for Your Loved One</h1>
+      <p class="hero-subtitle">Serving families across Sarasota, Florida with compassionate, personalized senior care since day one.</p>
+      <div class="hero-search">
+        <form id="hero-search-form" class="search-form">
+          <div class="search-fields">
+            <div class="search-field">
+              <label for="care-type">Type of Care</label>
+              <select id="care-type" name="care_type">
+                <option value="">All Care Types</option>
+                <option value="assisted-living">Assisted Living</option>
+                <option value="memory-care">Memory Care</option>
+                <option value="respite">Respite Care</option>
+              </select>
+            </div>
+            <div class="search-field">
+              <label for="budget">Monthly Budget</label>
+              <select id="budget" name="budget">
+                <option value="">Any Budget</option>
+                <option value="3000-5000">$3,000 - $5,000</option>
+                <option value="5000-7000">$5,000 - $7,000</option>
+                <option value="7000-10000">$7,000 - $10,000</option>
+                <option value="10000+">$10,000+</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-search">Find Communities</button>
+          </div>
+        </form>
+      </div>
+      <div class="hero-trust">
+        <div class="trust-item">
+          <span class="trust-number">3</span>
+          <span class="trust-label">Communities</span>
+        </div>
+        <div class="trust-item">
+          <span class="trust-number">100%</span>
+          <span class="trust-label">Licensed & Inspected</span>
+        </div>
+        <div class="trust-item">
+          <span class="trust-number">Free</span>
+          <span class="trust-label">Consultation</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Lead Capture Banner -->
+  <section class="quick-lead">
+    <div class="container">
+      <div class="quick-lead-content">
+        <div class="quick-lead-text">
+          <h2>Not Sure Where to Start?</h2>
+          <p>Tell us about your loved one and we'll help find the perfect fit — completely free.</p>
+        </div>
+        <form id="quick-lead-form" class="quick-lead-form">
+          <input type="text" name="name" placeholder="Your Name" required>
+          <input type="tel" name="phone" placeholder="Phone Number" required>
+          <button type="submit" class="btn btn-accent">Call Me Back</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Communities Section -->
+  <section id="communities" class="communities">
+    <div class="container">
+      <div class="section-header">
+        <h2>Our Assisted Living Communities</h2>
+        <p>Each Suncoast community offers a unique living experience with personalized care plans, engaging activities, and the warmth of home.</p>
+      </div>
+      <div class="community-grid">
+
+        <!-- Suncoast East -->
+        <div class="community-card" data-care="assisted-living,memory-care,respite" data-budget="5000-7000,7000-10000">
+          <div class="card-image card-image-east">
+            <span class="card-badge">Assisted Living</span>
+          </div>
+          <div class="card-body">
+            <h3>Suncoast East</h3>
+            <p class="card-location">&#128205; East Sarasota, FL</p>
+            <p class="card-description">A warm, home-like community providing personalized assisted living and memory care services in a comfortable residential setting.</p>
+            <ul class="card-features">
+              <li>&#10003; Personalized Care Plans</li>
+              <li>&#10003; 24/7 Licensed Staff</li>
+              <li>&#10003; Home-Cooked Meals</li>
+              <li>&#10003; Social Activities</li>
+            </ul>
+            <div class="card-actions">
+              <a href="pages/suncoast-east.html" class="btn btn-outline">Learn More</a>
+              <a href="https://suncoasteastsl.com/contact-us/" class="btn btn-primary" target="_blank" rel="noopener">Schedule a Tour</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Suncoast Club at Prestancia -->
+        <div class="community-card" data-care="assisted-living,memory-care,respite" data-budget="7000-10000,10000+">
+          <div class="card-image card-image-club">
+            <span class="card-badge">Premium Living</span>
+          </div>
+          <div class="card-body">
+            <h3>Suncoast Club at Prestancia</h3>
+            <p class="card-location">&#128205; Prestancia, Sarasota, FL</p>
+            <p class="card-description">An upscale assisted living experience nestled in the prestigious Prestancia community, offering resort-style amenities and exceptional care.</p>
+            <ul class="card-features">
+              <li>&#10003; Resort-Style Amenities</li>
+              <li>&#10003; Chef-Prepared Dining</li>
+              <li>&#10003; Memory Care Program</li>
+              <li>&#10003; Beautiful Grounds</li>
+            </ul>
+            <div class="card-actions">
+              <a href="pages/suncoast-club.html" class="btn btn-outline">Learn More</a>
+              <a href="https://suncoastclubsl.com/contact-us/" class="btn btn-primary" target="_blank" rel="noopener">Schedule a Tour</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Suncoast House -->
+        <div class="community-card" data-care="assisted-living,respite" data-budget="3000-5000,5000-7000">
+          <div class="card-image card-image-house">
+            <span class="card-badge">Intimate Setting</span>
+          </div>
+          <div class="card-body">
+            <h3>Suncoast House</h3>
+            <p class="card-location">&#128205; Sarasota, FL</p>
+            <p class="card-description">An intimate, family-style assisted living home offering attentive personal care in a cozy, residential environment your loved one will love.</p>
+            <ul class="card-features">
+              <li>&#10003; Small, Intimate Setting</li>
+              <li>&#10003; Family-Style Dining</li>
+              <li>&#10003; Individualized Attention</li>
+              <li>&#10003; Respite Care Available</li>
+            </ul>
+            <div class="card-actions">
+              <a href="pages/suncoast-house.html" class="btn btn-outline">Learn More</a>
+              <a href="https://suncoasthousesl.com/contact-us/" class="btn btn-primary" target="_blank" rel="noopener">Schedule a Tour</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="how-it-works">
+    <div class="container">
+      <div class="section-header">
+        <h2>How It Works</h2>
+        <p>Finding the right assisted living community is easy with Suncoast Senior Living.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Tell Us About Your Needs</h3>
+          <p>Share details about your loved one's care needs, preferences, and budget. Our team listens carefully.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Get Matched</h3>
+          <p>We'll recommend the Suncoast community that best fits your family's unique situation.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Tour & Decide</h3>
+          <p>Visit your matched community, meet the staff, and see firsthand why families choose Suncoast.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Full Lead Capture Form -->
+  <section id="get-help" class="lead-form-section">
+    <div class="container">
+      <div class="lead-form-wrapper">
+        <div class="lead-form-info">
+          <h2>Get Your Free Senior Living Consultation</h2>
+          <p>Our experienced team will help you navigate the options and find the perfect community for your loved one. There's no cost and no obligation.</p>
+          <ul class="lead-benefits">
+            <li>&#10003; 100% free — we never charge families</li>
+            <li>&#10003; Personalized recommendations</li>
+            <li>&#10003; Help with budgeting and financial options</li>
+            <li>&#10003; Guided tours of our communities</li>
+            <li>&#10003; Ongoing support through the transition</li>
+          </ul>
+          <div class="lead-phone">
+            <span>Prefer to talk?</span>
+            <a href="tel:+19415555555" class="phone-number">(941) 555-5555</a>
+          </div>
+        </div>
+        <form id="main-lead-form" class="lead-form">
+          <h3>Request Information</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="lead-first-name">First Name *</label>
+              <input type="text" id="lead-first-name" name="first_name" required>
+            </div>
+            <div class="form-group">
+              <label for="lead-last-name">Last Name *</label>
+              <input type="text" id="lead-last-name" name="last_name" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="lead-email">Email Address *</label>
+              <input type="email" id="lead-email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="lead-phone">Phone Number *</label>
+              <input type="tel" id="lead-phone" name="phone" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="lead-relationship">Your Relationship</label>
+            <select id="lead-relationship" name="relationship">
+              <option value="">Select...</option>
+              <option value="spouse">Spouse</option>
+              <option value="child">Adult Child</option>
+              <option value="sibling">Sibling</option>
+              <option value="friend">Friend</option>
+              <option value="self">Self</option>
+              <option value="professional">Professional/Social Worker</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="lead-care-type">Type of Care Needed</label>
+            <select id="lead-care-type" name="care_type">
+              <option value="">Select...</option>
+              <option value="assisted-living">Assisted Living</option>
+              <option value="memory-care">Memory Care</option>
+              <option value="respite">Respite / Short-Term Stay</option>
+              <option value="not-sure">Not Sure Yet</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="lead-community">Interested Community</label>
+            <select id="lead-community" name="community">
+              <option value="">Any / Not Sure</option>
+              <option value="suncoast-east">Suncoast East</option>
+              <option value="suncoast-club">Suncoast Club at Prestancia</option>
+              <option value="suncoast-house">Suncoast House</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="lead-timeline">Move-In Timeline</label>
+            <select id="lead-timeline" name="timeline">
+              <option value="">Select...</option>
+              <option value="immediately">Immediately</option>
+              <option value="1-month">Within 1 Month</option>
+              <option value="1-3-months">1-3 Months</option>
+              <option value="3-6-months">3-6 Months</option>
+              <option value="exploring">Just Exploring</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="lead-message">Tell Us More (Optional)</label>
+            <textarea id="lead-message" name="message" rows="3" placeholder="Share any details about care needs, preferences, or questions..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">Get My Free Consultation</button>
+          <p class="form-disclaimer">By submitting this form, you agree to be contacted by Suncoast Senior Living. We respect your privacy and will never share your information.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <h2>What Families Are Saying</h2>
+      </div>
+      <div class="testimonial-grid">
+        <div class="testimonial-card">
+          <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p>"The team at Suncoast made what felt like an impossible decision into a smooth, guided process. Mom is happy and thriving."</p>
+          <span class="testimonial-author">— Jennifer R., Daughter</span>
+        </div>
+        <div class="testimonial-card">
+          <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p>"We toured all three communities and each one felt like home. The staff genuinely care about the residents."</p>
+          <span class="testimonial-author">— Michael T., Son</span>
+        </div>
+        <div class="testimonial-card">
+          <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p>"From the first phone call to move-in day, Suncoast held our hand through every step. I can't recommend them enough."</p>
+          <span class="testimonial-author">— Patricia W., Daughter</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Compare Section -->
+  <section class="compare">
+    <div class="container">
+      <div class="section-header">
+        <h2>Compare Our Communities</h2>
+        <p>Find the community that's the right fit for your family.</p>
+      </div>
+      <div class="compare-table-wrapper">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Suncoast East</th>
+              <th>Suncoast Club at Prestancia</th>
+              <th>Suncoast House</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Setting</td>
+              <td>Residential Community</td>
+              <td>Upscale / Resort-Style</td>
+              <td>Intimate Home</td>
+            </tr>
+            <tr>
+              <td>Assisted Living</td>
+              <td>&#10003;</td>
+              <td>&#10003;</td>
+              <td>&#10003;</td>
+            </tr>
+            <tr>
+              <td>Memory Care</td>
+              <td>&#10003;</td>
+              <td>&#10003;</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>Respite Care</td>
+              <td>&#10003;</td>
+              <td>&#10003;</td>
+              <td>&#10003;</td>
+            </tr>
+            <tr>
+              <td>Dining</td>
+              <td>Home-Cooked Meals</td>
+              <td>Chef-Prepared</td>
+              <td>Family-Style</td>
+            </tr>
+            <tr>
+              <td>Best For</td>
+              <td>Comfortable residential care</td>
+              <td>Premium lifestyle & care</td>
+              <td>Personalized, small-group living</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td><a href="https://suncoasteastsl.com/contact-us/" class="btn btn-sm btn-primary" target="_blank" rel="noopener">Get Info</a></td>
+              <td><a href="https://suncoastclubsl.com/contact-us/" class="btn btn-sm btn-primary" target="_blank" rel="noopener">Get Info</a></td>
+              <td><a href="https://suncoasthousesl.com/contact-us/" class="btn btn-sm btn-primary" target="_blank" rel="noopener">Get Info</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Suncoast Senior Living</h4>
+          <p>Connecting families with trusted assisted living communities in Sarasota, Florida. Your loved one deserves the best — let us help you find it.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Our Communities</h4>
+          <ul>
+            <li><a href="pages/suncoast-east.html">Suncoast East</a></li>
+            <li><a href="pages/suncoast-club.html">Suncoast Club at Prestancia</a></li>
+            <li><a href="pages/suncoast-house.html">Suncoast House</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="pages/resources.html">Senior Living Guide</a></li>
+            <li><a href="pages/resources.html#checklist">Facility Checklist</a></li>
+            <li><a href="pages/resources.html#faq">FAQs</a></li>
+            <li><a href="pages/about.html">About Suncoast</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact Us</h4>
+          <p>Sarasota, Florida</p>
+          <p><a href="tel:+19415555555">(941) 555-5555</a></p>
+          <p><a href="mailto:info@suncoastsl.com">info@suncoastsl.com</a></p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Suncoast Senior Living. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="pages/privacy.html">Privacy Policy</a>
+          <a href="pages/terms.html">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Sticky CTA for Mobile -->
+  <div class="sticky-cta">
+    <a href="tel:+19415555555" class="btn btn-accent">&#9742; Call Now</a>
+    <a href="#get-help" class="btn btn-primary">Get Free Help</a>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
