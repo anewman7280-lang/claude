@@ -105,8 +105,8 @@
 
       if (community && COMMUNITIES[community]) {
         // Redirect to the specific community's ECP contact page
-        window.open(COMMUNITIES[community].url, '_blank');
-        showFormSuccess(form, COMMUNITIES[community].name);
+        var popup = window.open(COMMUNITIES[community].url, '_blank');
+        showFormSuccess(form, COMMUNITIES[community].name, COMMUNITIES[community].url, popup);
       } else {
         // No specific community — show success and provide options
         showFormSuccess(form);
@@ -130,16 +130,27 @@
     });
   }
 
-  function showFormSuccess(form, communityName) {
+  function showFormSuccess(form, communityName, communityUrl, popup) {
     var wrapper = form.parentElement;
     var successMsg = document.createElement('div');
     successMsg.className = 'form-success';
 
     if (communityName) {
-      successMsg.innerHTML =
-        '<h3>Thank You!</h3>' +
-        '<p>We\'ve opened the contact page for <strong>' + communityName + '</strong> so you can get in touch directly.</p>' +
-        '<p>A member of our team will also follow up with you shortly.</p>';
+      var popupBlocked = !popup || popup.closed;
+      if (popupBlocked) {
+        successMsg.innerHTML =
+          '<h3>Thank You!</h3>' +
+          '<p>We\'ve received your message. Please visit the contact page for <strong>' + communityName + '</strong> to get in touch directly:</p>' +
+          '<div style="margin-top:16px">' +
+          '<a href="' + communityUrl + '" class="btn btn-primary" target="_blank" rel="noopener">Contact ' + communityName + '</a>' +
+          '</div>' +
+          '<p style="margin-top:12px">A member of our team will also follow up with you shortly.</p>';
+      } else {
+        successMsg.innerHTML =
+          '<h3>Thank You!</h3>' +
+          '<p>We\'ve opened the contact page for <strong>' + communityName + '</strong> so you can get in touch directly.</p>' +
+          '<p>A member of our team will also follow up with you shortly.</p>';
+      }
     } else {
       successMsg.innerHTML =
         '<h3>Thank You!</h3>' +
