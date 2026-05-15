@@ -96,19 +96,28 @@
     form.addEventListener('submit', function (e) {
       e.preventDefault();
 
+      var submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+      }
+
       var formData = new FormData(form);
       var data = {};
       formData.forEach(function (value, key) { data[key] = value; });
 
       // Check if a specific community was selected
       var community = data.community || '';
+      var popup = null;
 
       if (community && COMMUNITIES[community]) {
-        // Redirect to the specific community's ECP contact page
-        var popup = window.open(COMMUNITIES[community].url, '_blank');
+        try {
+          popup = window.open(COMMUNITIES[community].url, '_blank');
+        } catch (err) {
+          popup = null;
+        }
         showFormSuccess(form, COMMUNITIES[community].name, COMMUNITIES[community].url, popup);
       } else {
-        // No specific community — show success and provide options
         showFormSuccess(form);
       }
 
@@ -188,11 +197,24 @@
   }
 
   // Initialize all lead forms
-  var mainLeadForm = document.getElementById('main-lead-form');
-  if (mainLeadForm) handleLeadForm(mainLeadForm, 'Main Consultation Form');
+  function initForms() {
+    var mainLeadForm = document.getElementById('main-lead-form');
+    if (mainLeadForm && !mainLeadForm._initialized) {
+      mainLeadForm._initialized = true;
+      handleLeadForm(mainLeadForm, 'Main Consultation Form');
+    }
 
-  var contactLeadForm = document.getElementById('contact-lead-form');
-  if (contactLeadForm) handleLeadForm(contactLeadForm, 'Contact Page Form');
+    var contactLeadForm = document.getElementById('contact-lead-form');
+    if (contactLeadForm && !contactLeadForm._initialized) {
+      contactLeadForm._initialized = true;
+      handleLeadForm(contactLeadForm, 'Contact Page Form');
+    }
+  }
+
+  initForms();
+  if (document.readyState !== 'complete') {
+    document.addEventListener('DOMContentLoaded', initForms);
+  }
 
   // ---- Smooth scroll for anchor links ----
   document.querySelectorAll('a[href^="#"]').forEach(function (link) {
