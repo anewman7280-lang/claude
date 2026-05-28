@@ -3,7 +3,14 @@
 
   // ===== KLAVIYO CONFIGURATION =====
   var KLAVIYO_PUBLIC_KEY = 'TSAcWK';
-  var KLAVIYO_LIST_ID = 'YOUR_KLAVIYO_LIST_ID';
+
+  // Per-community Klaviyo list IDs — replace each with the real list ID from Klaviyo
+  var KLAVIYO_LISTS = {
+    'suncoast-east':  'YOUR_SUNCOAST_EAST_LIST_ID',
+    'suncoast-club':  'YOUR_SUNCOAST_CLUB_LIST_ID',
+    'suncoast-house': 'YOUR_SUNCOAST_HOUSE_LIST_ID',
+    'general':        'YOUR_GENERAL_LIST_ID'
+  };
 
   var COMMUNITIES = {
     'suncoast-east': { name: 'Suncoast East' },
@@ -86,13 +93,17 @@
     return 'pages/thank-you.html';
   }
 
-  function submitToKlaviyo(profileData, formSource) {
-    if (KLAVIYO_PUBLIC_KEY === 'YOUR_KLAVIYO_PUBLIC_KEY' || KLAVIYO_LIST_ID === 'YOUR_KLAVIYO_LIST_ID') {
-      console.warn('[Suncoast] Klaviyo not configured — set KLAVIYO_PUBLIC_KEY and KLAVIYO_LIST_ID in js/main.js');
-      console.log('[Suncoast Lead]', formSource, profileData);
-      return Promise.resolve({ ok: true });
+  function getListId(community) {
+    if (community && KLAVIYO_LISTS[community] && KLAVIYO_LISTS[community].indexOf('YOUR_') !== 0) {
+      return KLAVIYO_LISTS[community];
     }
+    if (KLAVIYO_LISTS['general'] && KLAVIYO_LISTS['general'].indexOf('YOUR_') !== 0) {
+      return KLAVIYO_LISTS['general'];
+    }
+    return null;
+  }
 
+  function buildProfileAttributes(profileData, formSource) {
     var name;
     if (profileData.full_name) {
       name = splitName(profileData.full_name);
@@ -103,40 +114,51 @@
     var community = profileData.community || '';
     var communityName = (community && COMMUNITIES[community]) ? COMMUNITIES[community].name : 'General Inquiry';
 
-    return fetch('https://a.klaviyo.com/client/subscriptions/?company_id=' + KLAVIYO_PUBLIC_KEY, {
+    return {
+      email: profileData.email,
+      phone_number: formatPhone(profileData.phone),
+      first_name: name.first,
+      last_name: name.last,
+      properties: {
+        community_interest: communityName,
+        message: profileData.message || '',
+        source_form: formSource,
+        relationship: profileData.relationship || '',
+        care_type: profileData.care_type || '',
+        timeline: profileData.timeline || ''
+      }
+    };
+  }
+
+  function submitToKlaviyo(profileData, formSource) {
+    var attrs = buildProfileAttributes(profileData, formSource);
+    var community = profileData.community || '';
+    var listId = getListId(community);
+
+    if (listId) {
+      return fetch('https://a.klaviyo.com/client/subscriptions/?company_id=' + KLAVIYO_PUBLIC_KEY, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'revision': '2024-10-15' },
+        body: JSON.stringify({
+          data: {
+            type: 'subscription',
+            attributes: {
+              custom_source: formSource,
+              profile: { data: { type: 'profile', attributes: attrs } }
+            },
+            relationships: {
+              list: { data: { type: 'list', id: listId } }
+            }
+          }
+        })
+      });
+    }
+
+    return fetch('https://a.klaviyo.com/client/profiles/?company_id=' + KLAVIYO_PUBLIC_KEY, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'revision': '2024-10-15' },
       body: JSON.stringify({
-        data: {
-          type: 'subscription',
-          attributes: {
-            custom_source: formSource,
-            profile: {
-              data: {
-                type: 'profile',
-                attributes: {
-                  email: profileData.email,
-                  phone_number: formatPhone(profileData.phone),
-                  first_name: name.first,
-                  last_name: name.last,
-                  properties: {
-                    community_interest: communityName,
-                    message: profileData.message || '',
-                    source_form: formSource,
-                    relationship: profileData.relationship || '',
-                    care_type: profileData.care_type || '',
-                    timeline: profileData.timeline || ''
-                  }
-                }
-              }
-            }
-          },
-          relationships: {
-            list: {
-              data: { type: 'list', id: KLAVIYO_LIST_ID }
-            }
-          }
-        }
+        data: { type: 'profile', attributes: attrs }
       })
     });
   }
