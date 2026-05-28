@@ -191,7 +191,7 @@ h1, h2, h3, h4 { font-family: var(--font-heading); line-height: 1.3; }
   border-radius: var(--radius);
   font-family: var(--font-body);
   font-size: 1rem;
-  min-width: 180px;
+  min-width: 150px;
 }
 .quick-lead-form .btn { background: var(--color-primary-dark); border-color: var(--color-primary-dark); }
 .quick-lead-form .btn:hover { background: var(--color-primary); }
@@ -555,19 +555,42 @@ h1, h2, h3, h4 { font-family: var(--font-heading); line-height: 1.3; }
 }
 .sticky-cta .btn { flex: 1; text-align: center; padding: 12px; font-size: 0.95rem; }
 
-/* --- Form Success State --- */
-.form-success {
+/* --- Sidebar Lead Form --- */
+.sidebar-lead-form {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border);
+}
+.sidebar-lead-form h4 {
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+  color: var(--color-primary-dark);
+  font-family: var(--font-heading);
+}
+
+/* --- Form Error State --- */
+.form-error {
+  color: #c0392b;
+  font-size: 0.85rem;
   text-align: center;
-  padding: 40px 20px;
+  margin-top: 12px;
 }
-.form-success h3 {
-  color: var(--color-green);
-  font-size: 1.5rem;
-  margin-bottom: 12px;
+
+/* --- Thank You Page --- */
+.thank-you-content { padding: 60px 0; }
+.thank-you-box {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
 }
-.form-success p {
+.thank-you-box h2 {
+  font-size: 1.8rem;
+  margin-bottom: 16px;
+  color: var(--color-primary-dark);
+}
+.thank-you-box p {
   color: var(--color-text-light);
-  font-size: 1rem;
+  font-size: 1.1rem;
 }
 
 /* --- Responsive --- */

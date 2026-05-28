@@ -1,25 +1,14 @@
-/**
- * Suncoast Senior Living — Main JavaScript
- * Handles lead capture forms, search filtering, FAQ toggles, and mobile nav.
- */
-
 (function () {
   'use strict';
 
-  // Community data with ECP contact page URLs
+  // ===== KLAVIYO CONFIGURATION =====
+  var KLAVIYO_PUBLIC_KEY = 'YOUR_KLAVIYO_PUBLIC_KEY';
+  var KLAVIYO_LIST_ID = 'YOUR_KLAVIYO_LIST_ID';
+
   var COMMUNITIES = {
-    'suncoast-east': {
-      name: 'Suncoast East',
-      url: 'https://suncoasteastsl.com/contact-us/'
-    },
-    'suncoast-club': {
-      name: 'Suncoast Club at Prestancia',
-      url: 'https://suncoastclubsl.com/contact-us/'
-    },
-    'suncoast-house': {
-      name: 'Suncoast House',
-      url: 'https://suncoasthousesl.com/contact-us/'
-    }
+    'suncoast-east': { name: 'Suncoast East' },
+    'suncoast-club': { name: 'Suncoast Club at Prestancia' },
+    'suncoast-house': { name: 'Suncoast House' }
   };
 
   // ---- Mobile Navigation ----
@@ -30,8 +19,6 @@
     navToggle.addEventListener('click', function () {
       navLinks.classList.toggle('open');
     });
-
-    // Close menu on link click
     navLinks.querySelectorAll('a').forEach(function (link) {
       link.addEventListener('click', function () {
         navLinks.classList.remove('open');
@@ -55,25 +42,19 @@
       var careType = document.getElementById('care-type').value;
       var budget = document.getElementById('budget').value;
       filterCommunities(careType, budget);
-
-      // Scroll to communities section
-      var communitiesSection = document.getElementById('communities');
-      if (communitiesSection) {
-        communitiesSection.scrollIntoView({ behavior: 'smooth' });
-      }
+      var section = document.getElementById('communities');
+      if (section) section.scrollIntoView({ behavior: 'smooth' });
     });
   }
 
   function filterCommunities(careType, budget) {
     var cards = document.querySelectorAll('.community-card');
     var anyVisible = false;
-
     cards.forEach(function (card) {
       var cardCare = card.getAttribute('data-care') || '';
       var cardBudget = card.getAttribute('data-budget') || '';
       var matchesCare = !careType || cardCare.indexOf(careType) !== -1;
       var matchesBudget = !budget || cardBudget.indexOf(budget) !== -1;
-
       if (matchesCare && matchesBudget) {
         card.style.display = '';
         anyVisible = true;
@@ -81,142 +62,153 @@
         card.style.display = 'none';
       }
     });
-
-    // If nothing matches, show all with a message
     if (!anyVisible) {
       cards.forEach(function (card) { card.style.display = ''; });
     }
   }
 
-  // ---- Lead Form Handling ----
-  // All forms either redirect to the appropriate ECP contact page
-  // or show a success message and can be configured to POST to your CRM.
+  // ---- Klaviyo Integration ----
 
-  function handleLeadForm(form, formName) {
+  function splitName(fullName) {
+    var parts = (fullName || '').trim().split(/\s+/);
+    return { first: parts[0] || '', last: parts.slice(1).join(' ') || '' };
+  }
+
+  function formatPhone(phone) {
+    var digits = (phone || '').replace(/\D/g, '');
+    if (digits.length === 10) return '+1' + digits;
+    if (digits.length === 11 && digits[0] === '1') return '+' + digits;
+    return '+' + digits;
+  }
+
+  function getThankYouPath() {
+    if (window.location.pathname.indexOf('/pages/') !== -1) return 'thank-you.html';
+    return 'pages/thank-you.html';
+  }
+
+  function submitToKlaviyo(profileData, formSource) {
+    if (KLAVIYO_PUBLIC_KEY === 'YOUR_KLAVIYO_PUBLIC_KEY' || KLAVIYO_LIST_ID === 'YOUR_KLAVIYO_LIST_ID') {
+      console.warn('[Suncoast] Klaviyo not configured — set KLAVIYO_PUBLIC_KEY and KLAVIYO_LIST_ID in js/main.js');
+      console.log('[Suncoast Lead]', formSource, profileData);
+      return Promise.resolve({ ok: true });
+    }
+
+    var name;
+    if (profileData.full_name) {
+      name = splitName(profileData.full_name);
+    } else {
+      name = { first: profileData.first_name || '', last: profileData.last_name || '' };
+    }
+
+    var community = profileData.community || '';
+    var communityName = (community && COMMUNITIES[community]) ? COMMUNITIES[community].name : 'General Inquiry';
+
+    return fetch('https://a.klaviyo.com/client/subscriptions/?company_id=' + KLAVIYO_PUBLIC_KEY, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'revision': '2024-10-15' },
+      body: JSON.stringify({
+        data: {
+          type: 'subscription',
+          attributes: {
+            custom_source: formSource,
+            profile: {
+              data: {
+                type: 'profile',
+                attributes: {
+                  email: profileData.email,
+                  phone_number: formatPhone(profileData.phone),
+                  first_name: name.first,
+                  last_name: name.last,
+                  properties: {
+                    community_interest: communityName,
+                    message: profileData.message || '',
+                    source_form: formSource,
+                    relationship: profileData.relationship || '',
+                    care_type: profileData.care_type || '',
+                    timeline: profileData.timeline || ''
+                  }
+                }
+              }
+            }
+          },
+          relationships: {
+            list: {
+              data: { type: 'list', id: KLAVIYO_LIST_ID }
+            }
+          }
+        }
+      })
+    });
+  }
+
+  // ---- Form Handler ----
+
+  function handleLeadForm(form, formSource) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
 
-      var submitBtn = form.querySelector('button[type="submit"]');
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Sending...';
+      var btn = form.querySelector('button[type="submit"]');
+      var originalText = btn ? btn.textContent : '';
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Sending...';
       }
+
+      var existing = form.querySelector('.form-error');
+      if (existing) existing.remove();
 
       var formData = new FormData(form);
       var data = {};
       formData.forEach(function (value, key) { data[key] = value; });
 
-      // Check if a specific community was selected
-      var community = data.community || '';
-      var popup = null;
-
-      if (community && COMMUNITIES[community]) {
-        try {
-          popup = window.open(COMMUNITIES[community].url, '_blank');
-        } catch (err) {
-          popup = null;
-        }
-        showFormSuccess(form, COMMUNITIES[community].name, COMMUNITIES[community].url, popup);
-      } else {
-        showFormSuccess(form);
-      }
-
-      // Log lead data (replace with actual CRM API call)
-      console.log('[Suncoast Lead]', formName, data);
-
-      // --- CRM INTEGRATION POINT ---
-      // To send leads directly to ECP or another CRM, uncomment and configure:
-      //
-      // fetch('YOUR_CRM_ENDPOINT_URL', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(data)
-      // }).then(function(response) {
-      //   console.log('Lead sent to CRM', response);
-      // }).catch(function(error) {
-      //   console.error('CRM error', error);
-      // });
+      submitToKlaviyo(data, formSource)
+        .then(function (response) {
+          if (!response.ok && response.status !== 202 && response.status !== 409) {
+            throw new Error('Server returned ' + response.status);
+          }
+          window.location.href = getThankYouPath();
+        })
+        .catch(function (err) {
+          console.error('[Suncoast Lead Error]', err);
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = originalText;
+          }
+          var msg = document.createElement('p');
+          msg.className = 'form-error';
+          msg.textContent = 'Something went wrong. Please try again or call us at (941) 555-5555.';
+          btn.parentNode.insertBefore(msg, btn.nextSibling);
+        });
     });
   }
 
-  function showFormSuccess(form, communityName, communityUrl, popup) {
-    var wrapper = form.parentElement;
-    var successMsg = document.createElement('div');
-    successMsg.className = 'form-success';
+  // ---- Initialize All Forms ----
 
-    if (communityName) {
-      var popupBlocked = !popup || popup.closed;
-      if (popupBlocked) {
-        successMsg.innerHTML =
-          '<h3>Thank You!</h3>' +
-          '<p>We\'ve received your message. Please visit the contact page for <strong>' + communityName + '</strong> to get in touch directly:</p>' +
-          '<div style="margin-top:16px">' +
-          '<a href="' + communityUrl + '" class="btn btn-primary" target="_blank" rel="noopener">Contact ' + communityName + '</a>' +
-          '</div>' +
-          '<p style="margin-top:12px">A member of our team will also follow up with you shortly.</p>';
-      } else {
-        successMsg.innerHTML =
-          '<h3>Thank You!</h3>' +
-          '<p>We\'ve opened the contact page for <strong>' + communityName + '</strong> so you can get in touch directly.</p>' +
-          '<p>A member of our team will also follow up with you shortly.</p>';
-      }
-    } else {
-      successMsg.innerHTML =
-        '<h3>Thank You!</h3>' +
-        '<p>We\'ve received your information and a member of our team will contact you shortly.</p>' +
-        '<p>In the meantime, feel free to contact any of our communities directly:</p>' +
-        '<div style="margin-top:16px">' +
-        '<a href="' + COMMUNITIES['suncoast-east'].url + '" class="btn btn-sm btn-primary" target="_blank" rel="noopener" style="margin:4px">Suncoast East</a> ' +
-        '<a href="' + COMMUNITIES['suncoast-club'].url + '" class="btn btn-sm btn-primary" target="_blank" rel="noopener" style="margin:4px">Suncoast Club</a> ' +
-        '<a href="' + COMMUNITIES['suncoast-house'].url + '" class="btn btn-sm btn-primary" target="_blank" rel="noopener" style="margin:4px">Suncoast House</a>' +
-        '</div>';
-    }
-
-    form.style.display = 'none';
-    wrapper.appendChild(successMsg);
-  }
-
-  // Quick lead form (name + phone only)
-  var quickLeadForm = document.getElementById('quick-lead-form');
-  if (quickLeadForm) {
-    quickLeadForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var formData = new FormData(quickLeadForm);
-      var data = {};
-      formData.forEach(function (value, key) { data[key] = value; });
-
-      console.log('[Suncoast Quick Lead]', data);
-
-      // Replace form with thank you
-      quickLeadForm.innerHTML =
-        '<span style="font-size:1.1rem;font-weight:600">Thank you! We\'ll call you back shortly.</span>';
-
-      // --- CRM INTEGRATION POINT ---
-      // fetch('YOUR_CRM_ENDPOINT_URL', { ... });
-    });
-  }
-
-  // Initialize all lead forms
   function initForms() {
-    var mainLeadForm = document.getElementById('main-lead-form');
-    if (mainLeadForm && !mainLeadForm._initialized) {
-      mainLeadForm._initialized = true;
-      handleLeadForm(mainLeadForm, 'Main Consultation Form');
-    }
+    var forms = [
+      { id: 'contact-lead-form', source: 'Suncoast Senior Living Contact Page' },
+      { id: 'east-lead-form', source: 'Suncoast East Contact Form' },
+      { id: 'club-lead-form', source: 'Suncoast Club Contact Form' },
+      { id: 'house-lead-form', source: 'Suncoast House Contact Form' },
+      { id: 'main-lead-form', source: 'Homepage Consultation Form' },
+      { id: 'quick-lead-form', source: 'Homepage Quick Lead' }
+    ];
 
-    var contactLeadForm = document.getElementById('contact-lead-form');
-    if (contactLeadForm && !contactLeadForm._initialized) {
-      contactLeadForm._initialized = true;
-      handleLeadForm(contactLeadForm, 'Contact Page Form');
-    }
+    forms.forEach(function (f) {
+      var el = document.getElementById(f.id);
+      if (el && !el._klInit) {
+        el._klInit = true;
+        handleLeadForm(el, f.source);
+      }
+    });
   }
 
   initForms();
-  if (document.readyState !== 'complete') {
+  if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initForms);
   }
 
-  // ---- Smooth scroll for anchor links ----
+  // ---- Smooth Scroll ----
   document.querySelectorAll('a[href^="#"]').forEach(function (link) {
     link.addEventListener('click', function (e) {
       var target = document.querySelector(this.getAttribute('href'));
@@ -227,15 +219,13 @@
     });
   });
 
-  // ---- Sticky header shadow on scroll ----
+  // ---- Sticky Header Shadow ----
   var header = document.querySelector('.site-header');
   if (header) {
     window.addEventListener('scroll', function () {
-      if (window.scrollY > 10) {
-        header.style.boxShadow = '0 2px 12px rgba(0,0,0,0.1)';
-      } else {
-        header.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)';
-      }
+      header.style.boxShadow = window.scrollY > 10
+        ? '0 2px 12px rgba(0,0,0,0.1)'
+        : '0 2px 8px rgba(0,0,0,0.06)';
     });
   }
 
