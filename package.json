@@ -4,7 +4,12 @@
   "description": "Suncoast Senior Living - Lead generation site connecting families with assisted living facilities",
   "scripts": {
     "start": "npx serve .",
-    "dev": "npx serve . --listen 3000"
+    "dev": "npx serve . --listen 3000",
+    "flyers": "node social-media/render.js",
+    "flyers:month": "node social-media/render.js"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.44.0"
   },
   "keywords": ["senior-living", "assisted-living", "lead-generation", "ALF"],
   "license": "UNLICENSED",

@@ -1,0 +1,310 @@
+/* ============================================================
+   Suncoast Senior Living — Social Media Flyer Design System
+   ------------------------------------------------------------
+   A reusable stylesheet for on-brand, postable flyers.
+   Every flyer is a fixed-size .canvas that renders 1:1 to PNG.
+
+   Sizes (add the modifier class to <div class="canvas ...">):
+     .canvas            1080 x 1080  square  (IG / FB feed, GBP)
+     .canvas--portrait  1080 x 1350  portrait (IG feed tall)
+     .canvas--story     1080 x 1920  story    (IG / FB stories)
+     .canvas--wide      1200 x 628   landscape (LinkedIn / FB link)
+
+   Fonts are system-safe (Georgia + Helvetica/Arial) so PNGs render
+   identically with no network. This mirrors the site's
+   Merriweather (serif) + Open Sans (sans) pairing.
+   ============================================================ */
+
+:root {
+  /* Brand palette — matches css/styles.css */
+  --primary: #1a5276;
+  --primary-light: #2471a3;
+  --primary-dark: #154360;
+  --accent: #e67e22;
+  --accent-dark: #d35400;
+  --green: #27ae60;
+  --bg: #f8f9fa;
+  --bg-warm: #fdf6ee;
+  --text: #2c3e50;
+  --text-light: #5d6d7e;
+  --white: #ffffff;
+  --ink: #1c2b39;
+
+  --font-heading: Georgia, 'Times New Roman', 'Merriweather', serif;
+  --font-body: Helvetica, Arial, 'Open Sans', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: #d7dde3;
+  font-family: var(--font-body);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Stack multiple flyers vertically when a page holds several */
+body { display: flex; flex-direction: column; align-items: center; gap: 32px; padding: 32px 0; }
+
+/* ---------- Canvas ---------- */
+.canvas {
+  position: relative;
+  width: 1080px;
+  height: 1080px;
+  background: var(--white);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  color: var(--text);
+}
+.canvas--portrait { width: 1080px; height: 1350px; }
+.canvas--story    { width: 1080px; height: 1920px; }
+.canvas--wide     { width: 1200px; height: 628px; }
+
+/* ---------- Brand mark & header ---------- */
+.brandbar {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 44px 56px;
+  z-index: 3;
+}
+.brandbar--onprimary { color: var(--white); }
+.sunmark {
+  flex: none;
+  width: 62px; height: 62px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 34px;
+  line-height: 1;
+  background: radial-gradient(circle at 35% 30%, #f6b24a, var(--accent) 70%);
+  color: var(--white);
+  box-shadow: 0 6px 18px rgba(230,126,34,0.35);
+}
+.brand-lockup { display: flex; flex-direction: column; }
+.brand-name {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 30px;
+  letter-spacing: 0.2px;
+  line-height: 1.1;
+  color: inherit;
+}
+.brand-tag {
+  font-size: 15px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+  margin-top: 3px;
+}
+.brandbar--onprimary .brand-tag { color: #ffd9a8; }
+
+/* ---------- Body ---------- */
+.body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px 64px 40px;
+  z-index: 3;
+}
+.body--center { align-items: center; text-align: center; }
+
+.eyebrow {
+  display: inline-block;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 22px;
+}
+.eyebrow--pill {
+  background: var(--accent);
+  color: var(--white);
+  padding: 10px 22px;
+  border-radius: 100px;
+  letter-spacing: 2px;
+}
+
+.headline {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--primary-dark);
+  font-size: 76px;
+  line-height: 1.08;
+  letter-spacing: -0.5px;
+}
+.headline--sm { font-size: 60px; }
+.headline--lg { font-size: 92px; }
+.headline em { color: var(--accent-dark); font-style: italic; }
+.canvas--onprimary .headline,
+.headline--light { color: var(--white); }
+
+.subhead {
+  font-size: 30px;
+  line-height: 1.45;
+  color: var(--text-light);
+  margin-top: 26px;
+  max-width: 820px;
+}
+.canvas--onprimary .subhead { color: rgba(255,255,255,0.9); }
+
+/* ---------- Checklist / educational ---------- */
+.checklist { margin-top: 40px; display: flex; flex-direction: column; gap: 26px; }
+.checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+  font-size: 32px;
+  line-height: 1.35;
+  color: var(--text);
+}
+.checklist .tick {
+  flex: none;
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: var(--green);
+  color: var(--white);
+  display: grid; place-items: center;
+  font-size: 26px; font-weight: 700;
+  margin-top: 2px;
+}
+.checklist--num .tick { background: var(--primary); }
+.canvas--onprimary .checklist li { color: rgba(255,255,255,0.95); }
+
+/* ---------- Quote / testimonial ---------- */
+.quote-mark {
+  font-family: var(--font-heading);
+  font-size: 150px;
+  line-height: 0.7;
+  color: var(--accent);
+  height: 90px;
+}
+.quote {
+  font-family: var(--font-heading);
+  font-size: 46px;
+  line-height: 1.4;
+  color: var(--primary-dark);
+  font-style: italic;
+  margin-top: 10px;
+}
+.canvas--onprimary .quote { color: var(--white); }
+.stars { color: #f4b740; font-size: 40px; letter-spacing: 6px; margin-top: 30px; }
+.attribution { margin-top: 24px; font-size: 26px; font-weight: 700; color: var(--text-light); }
+
+/* ---------- Photo zones ---------- */
+/* Real-photo placeholder: swap the whole element for a real image. */
+.photo-slot {
+  position: relative;
+  background:
+    repeating-linear-gradient(45deg, #eef2f5 0 24px, #e6ecf1 24px 48px);
+  border: 3px dashed var(--primary-light);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  color: var(--primary);
+  text-align: center;
+  gap: 12px;
+}
+.photo-slot .ps-icon { font-size: 72px; }
+.photo-slot .ps-label { font-size: 24px; font-weight: 700; letter-spacing: 1px; }
+.photo-slot .ps-hint { font-size: 18px; color: var(--text-light); max-width: 70%; }
+
+/* Stock/illustrative scene (no external image needed) */
+.scene {
+  position: relative;
+  background: linear-gradient(160deg, #bfe0f5 0%, #7fbfe6 45%, #4f9fce 100%);
+  overflow: hidden;
+}
+.scene .sun { position: absolute; width: 150px; height: 150px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, #ffe08a, #ffb64d 70%);
+  box-shadow: 0 0 90px 30px rgba(255,196,80,0.5); }
+.scene .palm { position: absolute; font-size: 180px; line-height: 1; filter: drop-shadow(0 8px 12px rgba(0,0,0,0.15)); }
+.scene .wave { position: absolute; left: 0; right: 0; bottom: 0; height: 34%;
+  background: linear-gradient(180deg, rgba(79,159,206,0) , #2f7fb0); }
+
+/* ---------- Footer / CTA ---------- */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 30px 56px;
+  background: var(--primary-dark);
+  color: var(--white);
+  z-index: 3;
+}
+.footer--accent { background: var(--accent-dark); }
+.footer-left { display: flex; flex-direction: column; gap: 4px; }
+.footer .site { font-size: 26px; font-weight: 700; letter-spacing: 0.3px; }
+.footer .phone { font-size: 20px; color: #ffd9a8; letter-spacing: 0.5px; }
+.cta-btn {
+  background: var(--accent);
+  color: var(--white);
+  font-weight: 700;
+  font-size: 24px;
+  padding: 18px 34px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+.footer--accent .cta-btn { background: var(--white); color: var(--accent-dark); }
+
+/* Location tag shown near footer or header */
+.loc-tag {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 22px; font-weight: 700; color: var(--primary);
+  background: var(--bg-warm);
+  padding: 12px 22px; border-radius: 100px;
+}
+
+/* ---------- Decorative helpers ---------- */
+.rays {
+  position: absolute; inset: 0; z-index: 0; opacity: 0.10;
+  background:
+    conic-gradient(from 0deg at 100% 0%,
+      var(--accent) 0 12deg, transparent 12deg 30deg,
+      var(--accent) 30deg 42deg, transparent 42deg 60deg,
+      var(--accent) 60deg 72deg, transparent 72deg 90deg);
+}
+.blob {
+  position: absolute; border-radius: 50%; z-index: 0;
+  background: radial-gradient(circle at 35% 35%, var(--primary-light), var(--primary-dark));
+  opacity: 0.10;
+}
+.corner-accent {
+  position: absolute; top: 0; right: 0; width: 260px; height: 260px; z-index: 1;
+  background: var(--accent);
+  clip-path: polygon(100% 0, 0 0, 100% 100%);
+  opacity: 0.9;
+}
+
+/* Full-bleed primary background variant */
+.canvas--onprimary {
+  background: linear-gradient(150deg, var(--primary-dark) 0%, var(--primary) 55%, var(--primary-light) 100%);
+  color: var(--white);
+}
+
+/* Warm background variant */
+.canvas--warm { background: var(--bg-warm); }
+
+/* Split layout: art on one side, content on the other */
+.split { flex-direction: row; }
+.split > .split-art { flex: 0 0 46%; position: relative; }
+.split > .split-content { flex: 1; display: flex; flex-direction: column; }
+
+/* Patriotic (holiday) ribbon */
+.usa-ribbon {
+  position: absolute; top: 0; left: 0; right: 0; height: 16px; z-index: 4;
+  background: repeating-linear-gradient(90deg, #b22234 0 60px, #ffffff 60px 120px);
+}
+.usa-stars {
+  position: absolute; top: 40px; right: 56px; font-size: 40px; letter-spacing: 8px;
+  color: #ffffff; opacity: 0.85; z-index: 4;
+}
+
+/* Watermark handle */
+.handle { font-size: 20px; color: var(--text-light); letter-spacing: 0.5px; }
+.canvas--onprimary .handle { color: rgba(255,255,255,0.7); }
