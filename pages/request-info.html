@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Request Information | Suncoast Senior Living</title>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+  // ─── ECP CRM CONFIG ────────────────────────────────────────────────────────
+  var API_URL     = 'https://crm.ecp123.com/system/integrations/webform/addLead_webform.cfm';
+  var APIKEY      = '495913AB-EFC1-4894-8899-CD79AE4EB87D';
+
+  var SNIPPETS = {
+    club:  '567',
+    house: '568',
+    east:  '569',
+  };
+
+  var UNSURE_AL = ['club', 'house', 'east'];
+  var UNSURE_MC = ['club', 'house'];
+
+  var THANKYOU_URL = 'https://suncoastsl.com/thank-you/';
+
+  var SOURCE_NAMES = {
+    club:  'Suncoast Club at Prestancia Website',
+    house: 'Suncoast House Website',
+    east:  'Suncoast East Website',
+  };
+  // ──────────────────────────────────────────────────────────────────────────
+
+  // ─── KLAVIYO LEAD-NURTURE SUBSCRIBE (parallel to ECP) ────────────────────
+  // Lead is routed to the matching facility's list. "unsure" goes to the
+  // parent-brand Suncoast Senior Living list (a separate flow).
+  var KLAVIYO_PUBLIC_KEY = 'TSAcWK';
+  var KLAVIYO_LISTS = {
+    club:   'YkBNKu', // Suncoast Club
+    house:  'V3ENVd', // Suncoast House
+    east:   'Sgh7in', // Suncoast East
+    unsure: 'Yxi5yr', // Suncoast Senior Living (parent brand)
+  };
+  function __subscribeKlaviyo(community, profileAttrs, smsConsent, phoneE164) {
+    try {
+      var listId = KLAVIYO_LISTS[community] || KLAVIYO_LISTS.unsure;
+      var profile = Object.assign({}, profileAttrs);
+      // Email subscription is implicit via list-add (lists are single_opt_in).
+      // SMS subscription requires explicit consent on the profile — without it,
+      // SMS flow nodes will skip the profile silently.
+      var subscriptions = { email: { marketing: { consent: 'SUBSCRIBED' } } };
+      if (smsConsent && phoneE164) {
+        profile.phone_number = phoneE164;
+        subscriptions.sms = { marketing: { consent: 'SUBSCRIBED' } };
+      }
+      profile.subscriptions = subscriptions;
+      var body = JSON.stringify({
+        data: {
+          type: 'subscription',
+          attributes: {
+            custom_source: 'Suncoast Senior Living Website Contact Form',
+            profile: { data: { type: 'profile', attributes: profile } }
+          },
+          relationships: { list: { data: { type: 'list', id: listId } } }
+        }
+      });
+      fetch('https://a.klaviyo.com/client/subscriptions/?company_id=' + KLAVIYO_PUBLIC_KEY, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'revision': '2024-10-15' },
+        body: body,
+        keepalive: true
+      }).catch(function () { /* silent */ });
+    } catch (e) { /* silent */ }
+  }
+  // ─────────────────────────────────────────────────────────────────────────
+
+  // ─── DUPLICATE SUBMISSION GUARD ──────────────────────────────────────────
+  var FORM_KEY = 'suncoast_main_submitted';
+  var isSubmitting = false;
+
+  if (sessionStorage.getItem(FORM_KEY)) {
+    document.addEventListener('DOMContentLoaded', function() {
+      var btn = document.getElementById('submitBtn');
+      var statusEl = document.getElementById('statusMsg');
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Already Submitted';
+      }
+      if (statusEl) {
+        statusEl.textContent = '✓ You have already submitted this form. If you need further assistance, please call us.';
+        statusEl.className = 'status success';
+      }
+    });
+  }
+  // ────────────────────────────────────────────────────────────────────────
+
+  function __scfInit() {
+  document.getElementById('careType').addEventListener('change', function () {
+    var val = this.value;
+    document.getElementById('alCommunities').style.display = val === 'al' ? 'block' : 'none';
+    document.getElementById('mcCommunities').style.display = val === 'mc' ? 'block' : 'none';
+    document.querySelectorAll('input[name="community"]').forEach(function(r) { r.checked = false; });
+  });
+
+  document.getElementById('inquiringFor').addEventListener('change', function () {
+    document.getElementById('lovedOneFields').style.display =
+      this.value === 'lovedOne' ? 'block' : 'none';
+  });
+
+  document.getElementById('submitBtn').addEventListener('click', function () {
+    // Block if already submitting or previously submitted in this session
+    if (isSubmitting || sessionStorage.getItem(FORM_KEY)) return;
+
+    var btn      = document.getElementById('submitBtn');
+    var statusEl = document.getElementById('statusMsg');
+
+    statusEl.className = 'status';
+    statusEl.textContent = '';
+
+    var firstName       = document.getElementById('firstName').value.trim();
+    var lastName        = document.getElementById('lastName').value.trim();
+    var email           = document.getElementById('email').value.trim();
+    var phoneRaw        = document.getElementById('phone').value.trim();
+    var inquiringFor    = document.getElementById('inquiringFor').value;
+    var lovedOneFN      = document.getElementById('lovedOneFirstName').value.trim();
+    var lovedOneLN      = document.getElementById('lovedOneLastName').value.trim();
+    var careType        = document.getElementById('careType').value;
+    var communityRadio  = document.querySelector('input[name="community"]:checked');
+    var community       = communityRadio ? communityRadio.value : null;
+    var reason          = document.getElementById('reason').value.trim();
+    var preferredMethod = document.getElementById('preferredMethod').value;
+    var message         = document.getElementById('message').value.trim();
+    var consent         = document.getElementById('consentCheck').checked;
+    var smsConsent      = false;
+    var phone           = phoneRaw.replace(/\D/g, '');
+
+    if (!firstName || !lastName) {
+      statusEl.textContent = 'Please enter your first and last name.';
+      statusEl.className = 'status error'; return;
+    }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      statusEl.textContent = 'Please enter a valid email address.';
+      statusEl.className = 'status error'; return;
+    }
+    if (!phone || phone.length < 10) {
+      statusEl.textContent = 'Please enter a valid 10-digit phone number.';
+      statusEl.className = 'status error'; return;
+    }
+    if (!inquiringFor) {
+      statusEl.textContent = 'Please select who you are inquiring for.';
+      statusEl.className = 'status error'; return;
+    }
+    if (inquiringFor === 'lovedOne' && (!lovedOneFN || !lovedOneLN)) {
+      statusEl.textContent = "Please enter your loved one's first and last name.";
+      statusEl.className = 'status error'; return;
+    }
+    if (!careType) {
+      statusEl.textContent = 'Please select the type of care needed.';
+      statusEl.className = 'status error'; return;
+    }
+    if (!community) {
+      statusEl.textContent = 'Please select a community preference.';
+      statusEl.className = 'status error'; return;
+    }
+    if (!reason) {
+      statusEl.textContent = 'Please enter a reason for your inquiry.';
+      statusEl.className = 'status error'; return;
+    }
+    if (!consent) {
+      statusEl.textContent = 'Please check the consent box before submitting.';
+      statusEl.className = 'status error'; return;
+    }
+
+    var targets;
+    if (community === 'unsure') {
+      targets = careType === 'al' ? UNSURE_AL : UNSURE_MC;
+    } else {
+      targets = [community];
+    }
+
+    // Lock submission
+    isSubmitting = true;
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    var urlParams = new URLSearchParams(window.location.search);
+    var trafficSrc = urlParams.get('utm_source') || urlParams.get('gclid') || '';
+    var careLabel = careType === 'al' ? 'Assisted Living' : 'Memory Care';
+
+    if (typeof gtag === 'function') {
+      gtag('event', 'generate_lead', {
+        event_category: 'Lead Form',
+        event_label:    'Suncoast Senior Living – ' + careLabel,
+        care_type:      careLabel,
+        community:      community
+      });
+    }
+
+    var promises = targets.map(function(target) {
+      var fd = new FormData();
+      fd.append('APIKEY',             APIKEY);
+      fd.append('SNIPPETID',          SNIPPETS[target]);
+      fd.append('SOURCE_NAME',        SOURCE_NAMES[target]);
+      fd.append('inquiringFor',       inquiringFor);
+      fd.append('FIRST_NAME',         firstName);
+      fd.append('LAST_NAME',          lastName);
+      fd.append('EMAIL',              email);
+      fd.append('PHONE',              phone);
+      fd.append('REASON_FOR_INQUIRY', reason + ' [Care: ' + careLabel + ']');
+      if (inquiringFor === 'lovedOne') {
+        fd.append('LOVED_ONE_FIRST_NAME', lovedOneFN);
+        fd.append('LOVED_ONE_LAST_NAME',  lovedOneLN);
+      }
+      if (preferredMethod) fd.append('PREFERRED_METHOD', preferredMethod);
+      if (message)         fd.append('LEAD_MESSAGE', message);
+      fd.append('INTEGRATION_SUBMISSION_LOCATION', window.location.href);
+      if (trafficSrc) fd.append('INTEGRATION_TRAFFIC_SOURCE', trafficSrc);
+
+      return fetch(API_URL, { method: 'POST', body: fd }).then(function(r) {
+        return r.text().then(function(text) { return { ok: r.ok, status: r.status, text: text }; });
+      });
+    });
+
+    Promise.all(promises)
+      .then(function(results) {
+        var allOk = results.every(function(resp) {
+          var data = {};
+          try { data = JSON.parse(resp.text); } catch (e) { /* ECP may return non-JSON */ }
+          var explicitOk   = data.success === 1 || data.success === true || data.success === '1' || data.SUCCESS === 1 || data.SUCCESS === true;
+          var explicitFail = data.success === 0 || data.success === false || !!data.error || !!data.errors;
+          return explicitOk || (resp.ok && !explicitFail);
+        });
+        console.log('[Suncoast form] submit responses', results.map(function(r) { return { httpStatus: r.status, body: r.text.slice(0, 300) }; }), 'allOk=' + allOk);
+        if (allOk) {
+          // Mark as submitted to prevent duplicates on page reload or back-navigation
+          sessionStorage.setItem(FORM_KEY, '1');
+          // Add lead to Klaviyo list (fires the matching facility's lead-nurture flow)
+          var phoneE164 = phone && phone.length === 10 ? '+1' + phone : null;
+          __subscribeKlaviyo(community, {
+            email:      email,
+            first_name: firstName,
+            last_name:  lastName
+          }, smsConsent, phoneE164);
+          // gtag already fired earlier in the submit handler. Go straight to thank-you.
+          // Tiny delay lets the Klaviyo fetch leave the network queue before navigation.
+          setTimeout(function () {
+            window.location.href = THANKYOU_URL;
+          }, 400);
+          return;
+          // ── unreachable below: legacy inline success path, kept for fallback only ──
+          statusEl.textContent = '✓ Thank you! Your request has been received. A member of our team will be in touch with you shortly.';
+          statusEl.className = 'status success';
+          // Keep button disabled — do not allow re-submit
+          btn.textContent = 'Submitted';
+          // Reset form fields
+          ['firstName','lastName','email','phone','reason','message','lovedOneFirstName','lovedOneLastName'].forEach(function(id) {
+            document.getElementById(id).value = '';
+          });
+          ['inquiringFor','careType','preferredMethod'].forEach(function(id) {
+            document.getElementById(id).selectedIndex = 0;
+          });
+          document.querySelectorAll('input[name="community"]').forEach(function(r) { r.checked = false; });
+          document.getElementById('lovedOneFields').style.display = 'none';
+          document.getElementById('alCommunities').style.display = 'none';
+          document.getElementById('mcCommunities').style.display = 'none';
+          document.getElementById('consentCheck').checked = false;
+        } else {
+          statusEl.textContent = 'There was a problem submitting your request. Please call us for assistance.';
+          statusEl.className = 'status error';
+          btn.disabled = false;
+          btn.textContent = 'Send My Request';
+          isSubmitting = false;
+        }
+      })
+      .catch(function(err) {
+        console.error('[Suncoast form] Network/parse error:', err);
+        statusEl.textContent = 'Something went wrong. Please try again or contact us directly.';
+        statusEl.className = 'status error';
+        btn.disabled = false;
+        btn.textContent = 'Send My Request';
+        isSubmitting = false;
+      });
+  });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', __scfInit);
+  } else {
+    __scfInit();
+  }
+</script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:         #2d4a7a;
+      --navy-dark:    #1e3358;
+      --orange:       #c8621a;
+      --orange-hover: #a84e12;
+      --orange-light: #fdf3ea;
+      --bg:           #f5f3f0;
+      --card:         #ffffff;
+      --ink:          #1a2540;
+      --muted:        #5a6478;
+      --border:       #dde2ec;
+      --radius:       4px;
+    }
+
+    body {
+      background: var(--bg);
+      font-family: 'Open Sans', sans-serif;
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1.5rem;
+    }
+
+    .wrapper { width: 100%; max-width: 580px; }
+
+    .header { text-align: center; margin-bottom: 2.2rem; }
+
+    .brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--navy);
+      letter-spacing: 0.02em;
+      margin: 0 auto 1.2rem;
+    }
+
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+
+    .header p {
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 300;
+      line-height: 1.6;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--orange);
+      border-radius: 6px;
+      padding: 2.5rem;
+      box-shadow: 0 2px 20px rgba(45,74,122,0.08);
+    }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .field { margin-bottom: 1.3rem; }
+
+    label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--navy);
+      margin-bottom: 0.45rem;
+    }
+    label .req { color: var(--orange); margin-left: 1px; }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select,
+    textarea {
+      width: 100%;
+      background: #fafafa;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.72rem 0.9rem;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 0.93rem;
+      color: var(--ink);
+      transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+      outline: none;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="tel"]:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px var(--orange-light);
+      background: #fff;
+    }
+
+    textarea { resize: vertical; min-height: 100px; }
+
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%235a6478' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.9rem center;
+      background-size: 10px;
+      padding-right: 2.5rem;
+      cursor: pointer;
+    }
+
+    /* Community selector — shown when care type needs location choice */
+    .community-selector {
+      display: none;
+      margin-bottom: 1.3rem;
+      padding: 1rem 1.1rem;
+      background: var(--orange-light);
+      border: 1.5px solid #f0c898;
+      border-radius: var(--radius);
+    }
+    .community-selector p {
+      font-size: 0.82rem;
+      color: var(--navy);
+      font-weight: 600;
+      margin-bottom: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+    .community-options { display: flex; flex-direction: column; gap: 0.5rem; }
+    .community-option {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.9rem;
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .community-option input[type="radio"] {
+      width: 16px; height: 16px; min-width: 16px;
+      accent-color: var(--orange);
+      cursor: pointer;
+    }
+
+    .consent {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      margin-bottom: 1.6rem;
+      padding: 1rem;
+      background: #f8f9fc;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+    .consent input[type="checkbox"] {
+      width: 17px; height: 17px; min-width: 17px;
+      margin-top: 2px;
+      cursor: pointer;
+      accent-color: var(--navy);
+    }
+    .consent label {
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 400;
+      cursor: pointer;
+      line-height: 1.5;
+    }
+
+    #submitBtn {
+      width: 100%;
+      padding: 0.9rem;
+      background: var(--orange);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-family: 'Open Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    #submitBtn:hover  { background: var(--orange-hover); }
+    #submitBtn:active { transform: scale(0.99); }
+    #submitBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .status {
+      margin-top: 1.1rem;
+      padding: 0.9rem 1.1rem;
+      border-radius: var(--radius);
+      font-size: 0.88rem;
+      line-height: 1.5;
+      display: none;
+    }
+    .status.success { background: #eaf2fb; color: var(--navy-dark); border: 1px solid #b0c8e8; display: block; }
+    .status.error   { background: #fdecea; color: #7a1f1f; border: 1px solid #f0b9b5; display: block; }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--orange);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.4rem;
+      margin-bottom: 1.2rem;
+    }
+
+    #lovedOneFields { display: none; }
+
+    .form-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .form-footer a { color: var(--navy); text-decoration: none; }
+    .form-footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 500px) {
+      .form-row { grid-template-columns: 1fr; }
+      .card { padding: 1.8rem 1.2rem; }
+      .header h1 { font-size: 1.65rem; }
+      .community-options { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="header">
+    <div class="brand">Suncoast Senior Living</div>
+    <h1>Request More Information</h1>
+    <p>Tell us a little about your needs and we'll connect you<br>with the right Suncoast community.</p>
+  </div>
+
+  <div class="card">
+
+    <div class="section-label">Your Information</div>
+
+    <div class="form-row">
+      <div class="field">
+        <label for="firstName">First Name <span class="req">*</span></label>
+        <input type="text" id="firstName" placeholder="Jane" autocomplete="given-name" />
+      </div>
+      <div class="field">
+        <label for="lastName">Last Name <span class="req">*</span></label>
+        <input type="text" id="lastName" placeholder="Smith" autocomplete="family-name" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="email">Email Address <span class="req">*</span></label>
+      <input type="email" id="email" placeholder="jane@example.com" autocomplete="email" />
+    </div>
+
+    <div class="field">
+      <label for="phone">Phone Number <span class="req">*</span></label>
+      <input type="tel" id="phone" placeholder="(941) 555-0000" autocomplete="tel" />
+    </div>
+
+    <div class="field">
+      <label for="inquiringFor">I am inquiring for <span class="req">*</span></label>
+      <select id="inquiringFor">
+        <option value="" disabled selected>Select…</option>
+        <option value="myself">Myself</option>
+        <option value="lovedOne">A loved one</option>
+      </select>
+    </div>
+
+    <div id="lovedOneFields">
+      <div class="form-row">
+        <div class="field">
+          <label for="lovedOneFirstName">Loved One's First Name <span class="req">*</span></label>
+          <input type="text" id="lovedOneFirstName" placeholder="Frank" />
+        </div>
+        <div class="field">
+          <label for="lovedOneLastName">Loved One's Last Name <span class="req">*</span></label>
+          <input type="text" id="lovedOneLastName" placeholder="Smith" />
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="careType">Type of Care Needed <span class="req">*</span></label>
+      <select id="careType">
+        <option value="" disabled selected>Select…</option>
+        <option value="al">Assisted Living</option>
+        <option value="mc">Memory Care</option>
+      </select>
+    </div>
+
+    <!-- Shown for Assisted Living (3 options) -->
+    <div class="community-selector" id="alCommunities">
+      <p>Which community are you interested in?</p>
+      <div class="community-options">
+        <label class="community-option">
+          <input type="radio" name="community" value="club" />
+          Suncoast Club at Prestancia
+        </label>
+        <label class="community-option">
+          <input type="radio" name="community" value="house" />
+          Suncoast House
+        </label>
+        <label class="community-option">
+          <input type="radio" name="community" value="east" />
+          Suncoast East
+        </label>
+        <label class="community-option">
+          <input type="radio" name="community" value="unsure" />
+          Not sure yet
+        </label>
+      </div>
+    </div>
+
+    <!-- Shown for Memory Care (2 options) -->
+    <div class="community-selector" id="mcCommunities">
+      <p>Which community are you interested in?</p>
+      <div class="community-options">
+        <label class="community-option">
+          <input type="radio" name="community" value="club" />
+          Suncoast Club at Prestancia
+        </label>
+        <label class="community-option">
+          <input type="radio" name="community" value="house" />
+          Suncoast House
+        </label>
+        <label class="community-option">
+          <input type="radio" name="community" value="unsure" />
+          Not sure yet
+        </label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="reason">Reason for Inquiry <span class="req">*</span></label>
+      <input type="text" id="reason" placeholder="e.g. Looking for care options for my father" />
+    </div>
+
+    <div class="field">
+      <label for="preferredMethod">Preferred Contact Method</label>
+      <select id="preferredMethod">
+        <option value="">No preference</option>
+        <option value="Phone">Phone</option>
+        <option value="Text">Text</option>
+        <option value="Email">Email</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="message">Additional Message</label>
+      <textarea id="message" placeholder="Tell us a bit more about your situation or any questions you have…"></textarea>
+    </div>
+
+    <div class="consent">
+      <input type="checkbox" id="consentCheck" />
+      <label for="consentCheck">I agree to be contacted by the Suncoast Senior Living team regarding my inquiry. My information will be handled per your privacy policy.</label>
+    </div>
+
+
+    <button type="button" id="submitBtn">Send My Request</button>
+    <div class="status" id="statusMsg"></div>
+
+  </div>
+
+  <div class="form-footer">
+    <a href="https://suncoastsl.com/">← Back to Suncoast Senior Living</a><br><br>
+    Sarasota, Florida
+  </div>
+
+</div>
+
+<!-- Auto-resize: report height to the host page so the embed never clips/scrolls -->
+<script>
+(function () {
+  function postHeight() {
+    var h = Math.ceil(document.documentElement.scrollHeight);
+    if (window.parent !== window) {
+      window.parent.postMessage({ suncoastFormHeight: h }, '*');
+    }
+  }
+  window.addEventListener('load', postHeight);
+  window.addEventListener('resize', postHeight);
+  ['change', 'input', 'click'].forEach(function (evt) {
+    document.addEventListener(evt, function () { setTimeout(postHeight, 60); });
+  });
+  if (window.ResizeObserver) {
+    new ResizeObserver(postHeight).observe(document.body);
+  }
+  setInterval(postHeight, 1000);
+})();
+</script>
+</body>
+</html>

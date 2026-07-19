@@ -91,11 +91,9 @@
           <h2>Not Sure Where to Start?</h2>
           <p>Tell us about your loved one and we'll help find the perfect fit — completely free.</p>
         </div>
-        <form id="quick-lead-form" class="quick-lead-form">
-          <input type="text" name="name" placeholder="Your Name" required>
-          <input type="tel" name="phone" placeholder="Phone Number" required>
-          <button type="submit" class="btn btn-accent">Call Me Back</button>
-        </form>
+        <div class="quick-lead-form">
+          <a href="#get-help" class="btn btn-accent">Request Information</a>
+        </div>
       </div>
     </div>
   </section>
@@ -225,78 +223,8 @@
             <a href="tel:+19415555555" class="phone-number">(941) 555-5555</a>
           </div>
         </div>
-        <form id="main-lead-form" class="lead-form">
-          <h3>Request Information</h3>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="lead-first-name">First Name *</label>
-              <input type="text" id="lead-first-name" name="first_name" required>
-            </div>
-            <div class="form-group">
-              <label for="lead-last-name">Last Name *</label>
-              <input type="text" id="lead-last-name" name="last_name" required>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="lead-email">Email Address *</label>
-              <input type="email" id="lead-email" name="email" required>
-            </div>
-            <div class="form-group">
-              <label for="lead-phone">Phone Number *</label>
-              <input type="tel" id="lead-phone" name="phone" required>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="lead-relationship">Your Relationship</label>
-            <select id="lead-relationship" name="relationship">
-              <option value="">Select...</option>
-              <option value="spouse">Spouse</option>
-              <option value="child">Adult Child</option>
-              <option value="sibling">Sibling</option>
-              <option value="friend">Friend</option>
-              <option value="self">Self</option>
-              <option value="professional">Professional/Social Worker</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="lead-care-type">Type of Care Needed</label>
-            <select id="lead-care-type" name="care_type">
-              <option value="">Select...</option>
-              <option value="assisted-living">Assisted Living</option>
-              <option value="memory-care">Memory Care</option>
-              <option value="respite">Respite / Short-Term Stay</option>
-              <option value="not-sure">Not Sure Yet</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="lead-community">Interested Community</label>
-            <select id="lead-community" name="community">
-              <option value="">Any / Not Sure</option>
-              <option value="suncoast-east">Suncoast East</option>
-              <option value="suncoast-club">Suncoast Club at Prestancia</option>
-              <option value="suncoast-house">Suncoast House</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="lead-timeline">Move-In Timeline</label>
-            <select id="lead-timeline" name="timeline">
-              <option value="">Select...</option>
-              <option value="immediately">Immediately</option>
-              <option value="1-month">Within 1 Month</option>
-              <option value="1-3-months">1-3 Months</option>
-              <option value="3-6-months">3-6 Months</option>
-              <option value="exploring">Just Exploring</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="lead-message">Tell Us More (Optional)</label>
-            <textarea id="lead-message" name="message" rows="3" placeholder="Share any details about care needs, preferences, or questions..."></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary btn-full">Get My Free Consultation</button>
-          <p class="form-disclaimer">By submitting this form, you agree to be contacted by Suncoast Senior Living. We respect your privacy and will never share your information.</p>
-        </form>
+        <!-- Suncoast lead form (ECP CRM + Klaviyo). Single source: pages/request-info.html -->
+        <iframe class="suncoast-form-frame" src="pages/request-info.html" title="Request information from Suncoast Senior Living" loading="lazy" scrolling="no"></iframe>
       </div>
     </div>
   </section>
