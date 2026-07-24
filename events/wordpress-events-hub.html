@@ -1,0 +1,135 @@
+<div class="soc-care"><style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=Open+Sans:wght@300;400;600;700&display=swap');
+.soc-care{--navy:#1e3358;--navy-deep:#14233e;--orange:#c8621a;--orange-light:#f5b282;--accent:#c8621a;--accent-light:#f5b282;--cream:#faf7f2;--ink:#243043;--muted:#5b6678;--line:#e7e2d9;font-family:'Open Sans',sans-serif;color:var(--ink);line-height:1.6;}
+.soc-care *{box-sizing:border-box;}
+.soc-care h1,.soc-care h2,.soc-care h3,.soc-care h4{font-family:'Playfair Display',serif;}
+.soc-care img{display:block;max-width:100%;}
+.soc-care a{color:var(--accent);}
+.soc-care .wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
+.soc-care .btn{display:inline-block;font-weight:700;font-size:14px;letter-spacing:.6px;text-transform:uppercase;padding:15px 30px;border-radius:5px;text-decoration:none;}
+.soc-care .btn-primary{background:var(--accent);color:#fff;}
+.soc-care .btn-primary:hover{filter:brightness(.92);}
+.soc-care .btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.55);}
+.soc-care .btn-outline{background:#fff;color:var(--accent);border:1.5px solid var(--accent);}
+.soc-care .btn-outline:hover{background:var(--accent);color:#fff;}
+/* photo hero (hub) */
+.soc-care .hero{position:relative;min-height:420px;display:flex;align-items:center;color:#fff;overflow:hidden;}
+.soc-care .hero img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.soc-care .hero .scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,35,62,.6) 0%,rgba(20,35,62,.66) 50%,rgba(20,35,62,.9) 100%);}
+.soc-care .hero-inner{position:relative;max-width:1120px;margin:0 auto;width:100%;padding:46px 24px;}
+.soc-care .eyebrow{font-weight:700;font-size:14px;letter-spacing:3px;text-transform:uppercase;color:#ffe1cc;margin-bottom:14px;text-shadow:0 1px 8px rgba(0,0,0,.5);}
+.soc-care .hero h1{font-size:50px;font-weight:700;line-height:1.06;letter-spacing:-.5px;max-width:820px;text-shadow:0 2px 18px rgba(0,0,0,.55);color:#fff;margin:0;}
+.soc-care .hero p{font-size:19px;font-weight:400;max-width:700px;margin-top:16px;color:#f4f6fa;text-shadow:0 1px 10px rgba(0,0,0,.5);}
+.soc-care .btns{margin-top:26px;display:flex;gap:14px;flex-wrap:wrap;}
+/* sections */
+.soc-care .sec{padding:60px 0;}
+.soc-care .sec.cream{background:var(--cream);}
+.soc-care .kicker{color:var(--accent);font-weight:700;font-size:13px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:12px;}
+.soc-care .kicker.center{text-align:center;}
+.soc-care .sec h2{font-size:33px;color:var(--navy);margin:0 0 14px;line-height:1.14;}
+.soc-care .sec h2.center{text-align:center;}
+.soc-care .sec .sub{text-align:center;color:var(--muted);margin:0 auto 40px;max-width:660px;font-size:17px;}
+/* upcoming event card (hub) */
+.soc-care .feature-ev{display:grid;grid-template-columns:.85fr 1.15fr;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 18px 45px rgba(20,35,62,.12);max-width:960px;margin:0 auto;}
+.soc-care .feature-ev .ev-photo{position:relative;background:var(--navy);display:flex;align-items:center;justify-content:center;padding:20px;min-height:340px;}
+.soc-care .feature-ev .ev-photo img{width:auto;max-width:100%;max-height:340px;border-radius:8px;box-shadow:0 14px 30px rgba(0,0,0,.35);}
+.soc-care .feature-ev .badge{position:absolute;top:16px;left:16px;background:var(--accent);color:#fff;border-radius:12px;padding:11px 15px;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.3);}
+.soc-care .feature-ev .badge .mo{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+.soc-care .feature-ev .badge .day{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;line-height:1;}
+.soc-care .feature-ev .ev-body{padding:38px 40px;display:flex;flex-direction:column;justify-content:center;}
+.soc-care .feature-ev .tag{color:var(--accent);font-weight:700;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;}
+.soc-care .feature-ev h3{font-family:'Playfair Display',serif;font-size:30px;color:var(--navy);margin:0 0 10px;line-height:1.14;}
+.soc-care .feature-ev .when{color:var(--navy);font-weight:600;font-size:15px;margin:0 0 12px;}
+.soc-care .feature-ev p.desc{color:var(--muted);font-size:16px;margin:0 0 22px;}
+.soc-care .feature-ev .ev-btns{display:flex;gap:12px;flex-wrap:wrap;}
+/* event list wrappers + upcoming/past states */
+.soc-care .ev-list{display:flex;flex-direction:column;gap:26px;max-width:960px;margin:0 auto;}
+.soc-care .sec.soc-past{background:var(--cream);border-top:1px solid var(--line);}
+.soc-care .sec.soc-past .kicker{color:var(--muted);}
+.soc-care .soc-past .feature-ev{box-shadow:0 10px 26px rgba(20,35,62,.08);}
+.soc-care .soc-past .feature-ev .ev-photo img{filter:grayscale(.2);opacity:.94;}
+.soc-care .soc-past .feature-ev .badge{background:var(--muted);}
+.soc-care .ev-empty{max-width:960px;margin:0 auto;text-align:center;color:var(--muted);background:#fff;border:1px dashed var(--line);border-radius:14px;padding:40px 24px;font-size:16px;}
+/* communities cards (hub — mirrors home page) */
+.soc-care .com-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.soc-care .com{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 10px 30px rgba(20,35,62,.08);display:flex;flex-direction:column;}
+.soc-care .com img{width:100%;height:190px;object-fit:cover;}
+.soc-care .com .body{padding:22px 22px 24px;display:flex;flex-direction:column;flex:1;}
+.soc-care .com .care{color:var(--accent);font-weight:700;font-size:11.5px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:7px;}
+.soc-care .com h4{font-size:21px;color:var(--navy);margin:0 0 10px;}
+.soc-care .com .meta{font-size:13.5px;color:var(--navy);font-weight:600;margin-bottom:16px;line-height:1.6;flex:1;}
+.soc-care .com .meta span{display:block;color:var(--muted);font-weight:400;}
+.soc-care .com .more{font-weight:700;font-size:13px;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);text-decoration:none;}
+/* contact CTA */
+.soc-care .contact-cta{position:relative;overflow:hidden;text-align:center;padding:64px 0;color:#fff;}
+.soc-care .contact-cta .cta-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.soc-care .contact-cta .cta-scrim{position:absolute;inset:0;background:linear-gradient(135deg,rgba(20,35,62,.64),rgba(20,35,62,.74));}
+.soc-care .contact-cta .wrap{position:relative;max-width:760px;}
+.soc-care .contact-cta h3{margin:0 0 16px;font-family:'Playfair Display',serif;font-size:32px;text-shadow:0 2px 12px rgba(0,0,0,.6);}
+.soc-care .contact-cta .lead{color:#fff;font-size:18px;font-weight:400;margin:0 auto 28px;max-width:620px;text-shadow:0 1px 10px rgba(0,0,0,.6);}
+.soc-care .btn-cta{display:inline-block;background:#fff;color:var(--accent);font-weight:700;font-size:15px;letter-spacing:.6px;text-transform:uppercase;padding:17px 42px;border-radius:5px;text-decoration:none;}
+@media(max-width:880px){
+.soc-care .feature-ev,.soc-care .com-grid{grid-template-columns:1fr;}
+.soc-care .feature-ev .ev-photo{min-height:0;}
+.soc-care .wrap,.soc-care .hero-inner{padding-left:20px;padding-right:20px;}
+.soc-care .hero{min-height:340px;}.soc-care .hero-inner{padding-top:36px;padding-bottom:36px;}
+.soc-care .hero h1{font-size:31px;}
+.soc-care .hero p{font-size:17px;}
+.soc-care .btn{padding:14px 22px;font-size:13px;}
+.soc-care .sec{padding:44px 0;}
+.soc-care .sec h2,.soc-care .sec h2.center{font-size:26px;}
+.soc-care .feature-ev .ev-body{padding:28px 24px;}
+.soc-care .feature-ev h3{font-size:25px;}
+.soc-care .contact-cta h3{font-size:24px;}
+}
+</style>
+
+<div class="hero"><img class="bg" src="https://suncoastsl.com/wp-content/uploads/2026/06/soc-club-aerial.jpg" alt="Suncoast Senior Living community in Sarasota, Florida"><div class="scrim"></div><div class="hero-inner"><div class="eyebrow">Events &amp; Activities</div><h1>Events at Suncoast Senior Living</h1><p>Educational talks, live music, celebrations, and more — see what’s coming up across our Sarasota communities, and join us.</p><div class="btns"><a href="#soc-upcoming" class="btn btn-primary">See Upcoming Events</a><a href="https://suncoastsl.com/contact-us/#request" class="btn btn-ghost">Schedule a Tour</a></div></div></div>
+
+<div class="sec" id="soc-upcoming"><div class="wrap"><div class="kicker center">Upcoming Events</div><h2 class="center">Mark Your Calendar</h2><p class="sub">Join us at an upcoming event — the soonest is listed first. All are welcome.</p>
+<div class="ev-list" id="soc-upcoming-list">
+
+<div class="feature-ev" data-start="2026-07-28T15:30"><div class="ev-photo"><img src="https://suncoastsl.com/wp-content/uploads/2026/07/fall-prevention-flyer.jpg" alt="Fall Prevention Event flyer"><div class="badge"><div class="mo">JUL</div><div class="day">28</div></div></div><div class="ev-body"><div class="tag">Suncoast House</div><h3>Fall Prevention Event</h3><div class="when">📅 Tuesday, July 28, 2026 · 3:30 PM</div><p class="desc">A Meet &amp; Greet introducing VirtuSense — AI that helps identify fall risk earlier. Free and open to the community — RSVP to save your spot.</p><div class="ev-btns"><a href="https://suncoastsl.com/fall-prevention-virtusense/" class="btn btn-primary">Event Details &amp; RSVP</a><a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Fall%20Prevention%20Event&dates=20260728T193000Z/20260728T210000Z&location=Suncoast%20House%2C%203221%20Fruitville%20Road%2C%20Sarasota%2C%20FL%2034237&details=A%20Meet%20%26amp%3B%20Greet%20introducing%20VirtuSense%20%E2%80%94%20AI%20that%20helps%20identify%20fall%20risk%20earlier.%20Hosted%20at%20Suncoast%20House." target="_blank" rel="noopener" class="btn btn-outline">Add to Calendar</a></div></div></div>
+
+<div class="feature-ev" data-start="2026-08-11T14:00"><div class="ev-photo"><img src="https://suncoastsl.com/wp-content/uploads/2026/07/dont-get-tricked-flyer.jpg" alt="Don’t Get Tricked flyer"><div class="badge"><div class="mo">AUG</div><div class="day">11</div></div></div><div class="ev-body"><div class="tag">Suncoast Club at Prestancia</div><h3>Don’t Get Tricked</h3><div class="when">📅 Tuesday, August 11, 2026 · 2:00 PM</div><p class="desc">A Sarasota Sheriff’s presentation about senior scams. Free and open to the community — RSVP to save your spot.</p><div class="ev-btns"><a href="https://suncoastsl.com/dont-get-tricked/" class="btn btn-primary">Event Details &amp; RSVP</a><a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Don%E2%80%99t%20Get%20Tricked&dates=20260811T180000Z/20260811T193000Z&location=Suncoast%20Club%20at%20Prestancia%2C%203749%20Sarasota%20Square%20Blvd%2C%20Sarasota%2C%20FL%2034238&details=A%20Sarasota%20Sheriff%E2%80%99s%20presentation%20about%20senior%20scams.%20Hosted%20at%20Suncoast%20Club%20at%20Prestancia." target="_blank" rel="noopener" class="btn btn-outline">Add to Calendar</a></div></div></div>
+
+</div>
+<div class="ev-empty" id="soc-upcoming-empty" style="display:none;">No upcoming events are scheduled right now — please check back soon, or <a href="https://suncoastsl.com/contact-us/#request">contact us</a> to plan a visit.</div>
+</div></div>
+
+<div class="sec soc-past" id="soc-past"><div class="wrap"><div class="kicker center">Past Events</div><h2 class="center">A Look Back</h2><p class="sub">Recent gatherings from across our Sarasota communities.</p>
+<div class="ev-list" id="soc-past-list">
+
+<div class="feature-ev" data-start="2026-07-16T14:00"><div class="ev-photo"><img src="https://suncoastsl.com/wp-content/uploads/2026/07/todays-hospice-flyer.jpg" alt="Today’s Hospice flyer"><div class="badge"><div class="mo">JUL</div><div class="day">16</div></div></div><div class="ev-body"><div class="tag">Suncoast East</div><h3>Today’s Hospice</h3><div class="when">📅 Thursday, July 16, 2026 · 2:00 PM</div><p class="desc">The Myths &amp; The Realities — an honest conversation about hospice care.</p><div class="ev-btns"><a href="https://suncoastsl.com/todays-hospice/" class="btn btn-outline">View Event</a></div></div></div>
+
+</div>
+<div class="ev-empty" id="soc-past-empty" style="display:none;">Past events will appear here after they take place.</div>
+</div></div>
+
+<script>
+(function(){
+  function parse(s){var p=(s||'').split(/[-T:]/).map(Number);return new Date(p[0],(p[1]||1)-1,p[2]||1,p[3]||0,p[4]||0);}
+  function sod(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate());}
+  var root=document.querySelector('.soc-care');if(!root)return;
+  var upList=root.querySelector('#soc-upcoming-list'),pastList=root.querySelector('#soc-past-list');
+  if(!upList||!pastList)return;
+  var cards=[].slice.call(root.querySelectorAll('.feature-ev[data-start]'));
+  var today=sod(new Date()).getTime();
+  var up=[],past=[];
+  cards.forEach(function(c){(sod(parse(c.getAttribute('data-start'))).getTime()>=today?up:past).push(c);});
+  up.sort(function(a,b){return parse(a.getAttribute('data-start'))-parse(b.getAttribute('data-start'));});   // soonest first
+  past.sort(function(a,b){return parse(b.getAttribute('data-start'))-parse(a.getAttribute('data-start'));}); // most recent first
+  up.forEach(function(c){upList.appendChild(c);});
+  past.forEach(function(c){pastList.appendChild(c);});
+  var upEmpty=root.querySelector('#soc-upcoming-empty'),pastEmpty=root.querySelector('#soc-past-empty'),pastSec=root.querySelector('#soc-past');
+  if(upEmpty)upEmpty.style.display=up.length?'none':'block';
+  if(pastSec)pastSec.style.display=past.length?'':'none';
+  if(pastEmpty)pastEmpty.style.display=past.length?'none':'block';
+})();
+</script>
+
+<div class="sec cream"><div class="wrap"><div class="kicker center">Our Communities</div><h2 class="center">Where Our Events Happen</h2><p class="sub">Each of our three Sarasota communities hosts its own gatherings, outings, and celebrations throughout the year.</p>
+<div class="com-grid"><div class="com"><img src="https://suncoastsl.com/wp-content/uploads/2026/06/soc-club-card.jpg" alt="Suncoast Club at Prestancia, Sarasota"><div class="body"><div class="care">Assisted Living · Memory Care</div><h4>Suncoast Club</h4><div class="meta">📍 3749 Sarasota Square Blvd<span>(941) 922-1669</span></div><a href="https://suncoastclubsl.com/" target="_blank" rel="noopener" class="more">Explore Suncoast Club →</a></div></div><div class="com"><img src="https://suncoastsl.com/wp-content/uploads/2026/06/soc-house-card.jpg" alt="Suncoast House, Sarasota"><div class="body"><div class="care">Assisted Living · Memory Care</div><h4>Suncoast House</h4><div class="meta">📍 3221 Fruitville Rd<span>(941) 955-7575</span></div><a href="https://suncoasthousesl.com/" target="_blank" rel="noopener" class="more">Explore Suncoast House →</a></div></div><div class="com"><img src="https://suncoastsl.com/wp-content/uploads/2026/07/soc-east-entrance.jpg" alt="Suncoast East, Sarasota"><div class="body"><div class="care">Assisted Living</div><h4>Suncoast East</h4><div class="meta">📍 2290 Cattlemen Rd<span>(941) 378-5757</span></div><a href="https://suncoasteastsl.com/" target="_blank" rel="noopener" class="more">Explore Suncoast East →</a></div></div></div></div></div>
+
+<div class="contact-cta"><img class="cta-bg" src="https://suncoastsl.com/wp-content/uploads/2026/06/soc-club-exterior.jpg" alt=""><div class="cta-scrim"></div><div class="wrap"><h3>Come See It for Yourself</h3><p class="lead">The best way to experience life at Suncoast is to visit. Schedule a tour and join us for an upcoming event.</p><a href="https://suncoastsl.com/contact-us/#request" class="btn btn-cta">Request More Information</a></div></div>
+</div>
