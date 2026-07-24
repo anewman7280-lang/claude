@@ -68,5 +68,7 @@ with the right `data-start`. Deployed source: `events/wordpress-events-hub.html`
 - **Medicare event** (Janet Lambert / Lambert Insurance — Suncoast East, Tue Aug 11,
   2026, 2:00 PM): needs the flyer uploaded to Media + an East-routed WPForms form, then
   build the page and add an Upcoming card.
-- **Wellness event** (SlimFit — Suncoast East, Aug 29, 2026): on hold — flyer says
-  "Wednesday" but Aug 29 2026 is a Saturday (date to confirm) + flyer upload + East form.
+- **Wellness event** (SlimFit — Suncoast East, **Wed, Jul 29, 2026, 2:00 PM**; date
+  corrected on updated flyer): booster shots & IVs, $20/shot, $100/IV, "Boost Your
+  Wellness. Feel Your Best." Ready to build once the flyer is uploaded to Media and an
+  East-routed WPForms form id is provided; then add an Upcoming card.
