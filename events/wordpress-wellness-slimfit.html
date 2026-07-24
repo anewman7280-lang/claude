@@ -1,0 +1,96 @@
+<div class="soc-care"><style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=Open+Sans:wght@300;400;600;700&display=swap');
+.soc-care{--navy:#1e3358;--navy-deep:#14233e;--orange:#c8621a;--orange-light:#f5b282;--accent:#c8621a;--accent-light:#f5b282;--cream:#faf7f2;--ink:#243043;--muted:#5b6678;--line:#e7e2d9;font-family:'Open Sans',sans-serif;color:var(--ink);line-height:1.6;}
+.soc-care *{box-sizing:border-box;}
+.soc-care h1,.soc-care h2,.soc-care h3,.soc-care h4{font-family:'Playfair Display',serif;}
+.soc-care img{display:block;max-width:100%;}
+.soc-care a{color:var(--accent);}
+.soc-care .wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
+.soc-care .btn{display:inline-block;font-weight:700;font-size:14px;letter-spacing:.6px;text-transform:uppercase;padding:15px 30px;border-radius:5px;text-decoration:none;}
+.soc-care .btn-primary{background:var(--accent);color:#fff;}
+.soc-care .btn-primary:hover{filter:brightness(.92);}
+.soc-care .btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.55);}
+.soc-care .btn-outline{background:#fff;color:var(--accent);border:1.5px solid var(--accent);}
+.soc-care .btn-outline:hover{background:var(--accent);color:#fff;}
+/* split hero (event page — flyer is the picture) */
+.soc-care .ev-hero{background:var(--navy);}
+.soc-care .ev-hero .in{max-width:1120px;margin:0 auto;padding:54px 24px;display:grid;grid-template-columns:1.02fr .98fr;gap:52px;align-items:center;}
+.soc-care .ev-hero.no-poster .in{grid-template-columns:1fr;max-width:760px;text-align:center;}
+.soc-care .ev-hero.no-poster .chips,.soc-care .ev-hero.no-poster .btns{justify-content:center;}
+.soc-care .ev-hero.no-poster .tagline{margin-left:auto;margin-right:auto;}
+.soc-care .ev-hero .eyebrow{margin-bottom:12px;}
+.soc-care .eyebrow{font-weight:700;font-size:14px;letter-spacing:3px;text-transform:uppercase;color:#ffe1cc;margin-bottom:14px;}
+.soc-care .ev-hero h1{color:#fff;font-family:'Playfair Display',serif;font-size:52px;font-weight:700;line-height:1.04;letter-spacing:-.5px;margin:0 0 14px;}
+.soc-care .ev-hero .tagline{color:#e6ecf6;font-size:20px;font-weight:300;margin:0 0 22px;max-width:520px;}
+.soc-care .ev-hero .chips{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 26px;}
+.soc-care .ev-hero .chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.26);color:#fff;border-radius:30px;padding:9px 16px;font-size:14px;font-weight:600;}
+.soc-care .btns{display:flex;gap:14px;flex-wrap:wrap;}
+/* sections */
+.soc-care .sec{padding:60px 0;}
+.soc-care .sec.cream{background:var(--cream);}
+.soc-care .kicker{color:var(--accent);font-weight:700;font-size:13px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:12px;}
+.soc-care .kicker.center{text-align:center;}
+.soc-care .sec h2{font-size:33px;color:var(--navy);margin:0 0 14px;line-height:1.14;}
+.soc-care .sec h2.center{text-align:center;}
+.soc-care .sec .sub{text-align:center;color:var(--muted);margin:0 auto 40px;max-width:660px;font-size:17px;}
+.soc-care .back{display:inline-block;color:var(--muted);font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;text-decoration:none;margin-bottom:20px;}
+.soc-care .back:hover{color:var(--accent);}
+/* about + details card */
+.soc-care .about{display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:start;}
+.soc-care .about p{color:var(--muted);font-size:17px;margin:0 0 16px;}
+.soc-care .info-card{background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:28px 30px;box-shadow:0 12px 30px rgba(20,35,62,.08);}
+.soc-care .info-card h4{font-size:20px;color:var(--navy);margin:0 0 16px;}
+.soc-care .info-card ul{list-style:none;padding:0;margin:0 0 22px;}
+.soc-care .info-card li{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:15px;color:var(--ink);align-items:flex-start;}
+.soc-care .info-card li:last-child{border-bottom:none;}
+.soc-care .info-card li .mi{font-size:18px;flex-shrink:0;}
+.soc-care .info-card li b{color:var(--navy);}
+.soc-care .info-card li a{color:var(--accent);font-weight:600;text-decoration:none;}
+.soc-care .info-card .btn{width:100%;text-align:center;}
+/* feature tiles */
+.soc-care .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+.soc-care .feat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:26px 22px;}
+.soc-care .feat .ic{width:46px;height:46px;border-radius:10px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px;}
+.soc-care .feat h4{font-size:18px;color:var(--navy);margin:0 0 8px;}
+.soc-care .feat p{color:var(--muted);font-size:14.5px;margin:0;}
+@media(max-width:880px){
+.soc-care .ev-hero .in,.soc-care .about,.soc-care .feat-grid{grid-template-columns:1fr;}
+.soc-care .wrap{padding-left:20px;padding-right:20px;}
+.soc-care .ev-hero h1{font-size:31px;}
+.soc-care .ev-hero .tagline{font-size:17px;}
+.soc-care .btn{padding:14px 22px;font-size:13px;}
+.soc-care .sec{padding:44px 0;}
+.soc-care .sec h2,.soc-care .sec h2.center{font-size:26px;}
+}
+</style>
+
+<div class="ev-hero no-poster"><div class="in"><div class="copy"><div class="eyebrow">Suncoast East Event</div><h1>Wellness Event</h1><p class="tagline">With SlimFit of Sarasota — wellness booster shots &amp; IVs at a deeply discounted rate.</p><div class="chips"><span class="chip">📅 Wed, Jul 29</span><span class="chip">🕒 2:00 PM</span><span class="chip">💉 $20 / shot · $100 / IV</span><span class="chip">🎟️ Free · RSVP</span></div><div class="btns"><a href="#rsvp" class="btn btn-primary">RSVP Now</a><a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wellness%20Event%20with%20SlimFit%20%E2%80%94%20Suncoast%20East&dates=20260729T180000Z/20260729T200000Z&location=Suncoast%20East%2C%202290%20Cattlemen%20Road%2C%20Sarasota%2C%20FL%2034232&details=SlimFit%20of%20Sarasota%20wellness%20booster%20shots%20%26amp%3B%20IVs%20at%20a%20discounted%20rate.%20Hosted%20at%20Suncoast%20East." target="_blank" rel="noopener" class="btn btn-ghost">Add to Calendar</a></div></div></div></div>
+
+<div class="sec"><div class="wrap"><a href="https://suncoastsl.com/events/" class="back">&larr; All Events</a>
+<div class="about"><div><div class="kicker">About This Event</div><h2>Boost your wellness with SlimFit</h2><p>SlimFit of Sarasota is coming to Suncoast East with wellness booster shots and IV hydration therapy — offered at a deeply discounted rate, just for our community. Stop by, give your body a lift, and feel your best.</p><p>Choose from a menu of vitamin boosters and hydration IVs. Booster shots are just <b>$20 each</b> and IV treatments are <b>$100</b>. All are welcome — RSVP so we know to expect you.</p></div>
+<div class="info-card"><h4>Event Details</h4><ul>
+<li><span class="mi">📅</span><span><b>Wednesday, July 29, 2026</b></span></li>
+<li><span class="mi">🕒</span><span><b>2:00 PM</b></span></li>
+<li><span class="mi">🏛️</span><span><b>Suncoast East</b></span></li>
+<li><span class="mi">📍</span><span>2290 Cattlemen Road, Sarasota, FL 34232<br><a href="https://www.google.com/maps/search/?api=1&query=Suncoast%20East%2C%202290%20Cattlemen%20Road%2C%20Sarasota%2C%20FL%2034232" target="_blank" rel="noopener">Get Directions →</a></span></li>
+<li><span class="mi">📞</span><span><a href="tel:9413785757">(941) 378-5757</a></span></li>
+<li><span class="mi">💉</span><span><b>$20</b> per shot · <b>$100</b> per IV</span></li>
+<li><span class="mi">🎟️</span><span>Free to attend · RSVP appreciated</span></li>
+</ul><a href="#rsvp" class="btn btn-primary">RSVP Now</a></div></div></div></div>
+
+<div class="sec cream"><div class="wrap"><div class="kicker center">What to Expect</div><h2 class="center">Boost Your Wellness. Feel Your Best.</h2><p class="sub">A quick, feel-good visit with the SlimFit team — no appointment needed.</p>
+<div class="feat-grid"><div class="feat"><div class="ic">💉</div><h4>Booster Shots</h4><p>Vitamin &amp; wellness booster shots for just $20 each.</p></div><div class="feat"><div class="ic">💧</div><h4>IV Hydration</h4><p>Rejuvenating IV drips for $100 — support your energy and immunity.</p></div><div class="feat"><div class="ic">🌿</div><h4>Feel Your Best</h4><p>Walk out refreshed and recharged, feeling your very best.</p></div></div></div></div>
+
+<div class="sec rsvp-form" id="rsvp"><style>
+.soc-care .rsvp-form{background:var(--cream);}
+.soc-care .rsvp-form .wrap{max-width:680px;}
+.soc-care .rsvp-form .wpforms-container{margin:0;}
+.soc-care .rsvp-form .wpforms-field-text{display:none!important;}
+.soc-care .rsvp-form .wpforms-form input[type=text],.soc-care .rsvp-form .wpforms-form input[type=email],.soc-care .rsvp-form .wpforms-form input[type=tel],.soc-care .rsvp-form .wpforms-form input[type=number],.soc-care .rsvp-form .wpforms-form textarea{border:1px solid var(--line)!important;border-radius:8px!important;padding:12px 14px!important;font-size:16px!important;background:#fff!important;}
+.soc-care .rsvp-form .wpforms-form .wpforms-field-label{color:var(--navy)!important;font-weight:600!important;font-family:'Open Sans',sans-serif!important;}
+.soc-care .rsvp-form .wpforms-form .wpforms-field-description{color:var(--muted)!important;}
+.soc-care .rsvp-form .wpforms-submit{background:var(--accent)!important;border-color:var(--accent)!important;color:#fff!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.6px!important;padding:15px 34px!important;border-radius:5px!important;font-size:15px!important;}
+.soc-care .rsvp-form .wpforms-submit:hover{filter:brightness(.92)!important;}
+.soc-care .rsvp-form .wpforms-confirmation-container-full{background:#fff!important;border:1px solid var(--line)!important;border-left:4px solid var(--accent)!important;color:var(--ink)!important;border-radius:8px!important;}
+</style><div class="wrap"><div class="kicker center">RSVP</div><h2 class="center">Reserve Your Spot</h2><p class="sub">Reserve your spot for the Wellness Event with SlimFit on Wednesday, July 29, 2026 at 2:00 PM. We’ll confirm by email, and questions can go to <a href="mailto:Cbonney@suncoasteastsl.com">Cbonney@suncoasteastsl.com</a>.</p>[wpforms id="2416"]</div></div>
+</div>
