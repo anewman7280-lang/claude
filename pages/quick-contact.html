@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us | Suncoast Senior Living</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:#2d4a7a; --navy-dark:#1e3358; --orange:#c8621a; --orange-hover:#a84e12;
+      --orange-light:#fdf3ea; --bg:#f5f3f0; --card:#fff; --ink:#1a2540;
+      --muted:#5a6478; --border:#dde2ec; --radius:4px;
+    }
+    body { background: var(--bg); font-family:'Open Sans',Arial,sans-serif; color:var(--ink); padding: 2rem 1.25rem; }
+    .wrapper { width:100%; max-width:520px; margin:0 auto; }
+    .header { text-align:center; margin-bottom:1.8rem; }
+    .brand { font-family:'Playfair Display',Georgia,serif; font-size:1.4rem; font-weight:600; color:var(--navy); letter-spacing:.02em; margin-bottom:1rem; }
+    .header h1 { font-family:'Playfair Display',Georgia,serif; font-size:1.7rem; font-weight:600; color:var(--navy); margin-bottom:.4rem; line-height:1.2; }
+    .header p { color:var(--muted); font-size:.9rem; font-weight:300; line-height:1.6; }
+    .card { background:var(--card); border:1px solid var(--border); border-top:4px solid var(--orange); border-radius:6px; padding:2rem; box-shadow:0 2px 20px rgba(45,74,122,.08); }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .field { margin-bottom:1.2rem; }
+    label { display:block; font-size:.78rem; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--navy); margin-bottom:.45rem; }
+    label .req { color:var(--orange); margin-left:1px; }
+    input[type="text"], input[type="email"], input[type="tel"], textarea {
+      width:100%; background:#fafafa; border:1.5px solid var(--border); border-radius:var(--radius);
+      padding:.72rem .9rem; font-family:'Open Sans',Arial,sans-serif; font-size:.93rem; color:var(--ink);
+      transition:border-color .18s, box-shadow .18s, background .18s; outline:none;
+    }
+    input:focus, textarea:focus { border-color:var(--orange); box-shadow:0 0 0 3px var(--orange-light); background:#fff; }
+    textarea { resize:vertical; min-height:90px; }
+    #submitBtn {
+      width:100%; padding:.9rem; background:var(--orange); color:#fff; border:none; border-radius:var(--radius);
+      font-family:'Open Sans',Arial,sans-serif; font-size:1rem; font-weight:600; letter-spacing:.06em;
+      text-transform:uppercase; cursor:pointer; transition:background .2s;
+    }
+    #submitBtn:hover { background:var(--orange-hover); }
+    #submitBtn:disabled { opacity:.6; cursor:not-allowed; }
+    .fineprint { margin-top:1rem; font-size:.72rem; color:var(--muted); text-align:center; line-height:1.5; }
+    .status { margin-top:1rem; padding:.85rem 1rem; border-radius:var(--radius); font-size:.88rem; line-height:1.5; display:none; }
+    .status.success { background:#eaf2fb; color:var(--navy-dark); border:1px solid #b0c8e8; display:block; }
+    .status.error   { background:#fdecea; color:#7a1f1f; border:1px solid #f0b9b5; display:block; }
+    @media (max-width:480px){ .form-row{grid-template-columns:1fr;} .card{padding:1.5rem 1.2rem;} }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <div class="brand">Suncoast Senior Living</div>
+      <h1 id="formHeading">Contact Us</h1>
+      <p>Share your name and how to reach you, and a member of our team will be in touch shortly.</p>
+    </div>
+    <div class="card">
+      <div class="form-row">
+        <div class="field">
+          <label for="firstName">First Name <span class="req">*</span></label>
+          <input type="text" id="firstName" placeholder="Jane" autocomplete="given-name" />
+        </div>
+        <div class="field">
+          <label for="lastName">Last Name <span class="req">*</span></label>
+          <input type="text" id="lastName" placeholder="Smith" autocomplete="family-name" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="email">Email Address <span class="req">*</span></label>
+        <input type="email" id="email" placeholder="jane@example.com" autocomplete="email" />
+      </div>
+      <div class="field">
+        <label for="phone">Phone Number <span class="req">*</span></label>
+        <input type="tel" id="phone" placeholder="(941) 555-0000" autocomplete="tel" />
+      </div>
+      <div class="field">
+        <label for="message">Message <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">(optional)</span></label>
+        <textarea id="message" placeholder="Anything you'd like us to know…"></textarea>
+      </div>
+      <button type="button" id="submitBtn">Send My Request</button>
+      <div class="status" id="statusMsg"></div>
+      <p class="fineprint">By submitting this form you agree to be contacted by Suncoast Senior Living about your inquiry. Your information is handled per our privacy policy.</p>
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    var API_URL = 'https://crm.ecp123.com/system/integrations/webform/addLead_webform.cfm';
+    var APIKEY  = '495913AB-EFC1-4894-8899-CD79AE4EB87D';
+    var KLAVIYO_PUBLIC_KEY = 'TSAcWK';
+    var THANKYOU_URL = 'https://suncoastsl.com/thank-you/';
+
+    // Per-community config (locked by ?c= param)
+    var COMMUNITIES = {
+      east:  { snippet:'569', klaviyo:'Sgh7in', source:'Suncoast East Website',  label:'Suncoast East' },
+      house: { snippet:'568', klaviyo:'V3ENVd', source:'Suncoast House Website', label:'Suncoast House' },
+      club:  { snippet:'567', klaviyo:'YkBNKu', source:'Suncoast Club at Prestancia Website', label:'Suncoast Club at Prestancia' }
+    };
+    var PARENT_KLAVIYO = 'Yxi5yr'; // Suncoast Senior Living (parent brand) fallback
+
+    var params = new URLSearchParams(window.location.search);
+
+    function q(id){ return document.getElementById(id); }
+
+    // Community can come from ?c=east or #east (hash survives redirects/any host).
+    // Re-resolved on hashchange in case the fragment is applied after load.
+    var c, cfg, targets, klaviyoList, FORM_KEY;
+    function resolveCommunity() {
+      c = (params.get('c') || (window.location.hash || '').replace(/^#/, '') || '').toLowerCase();
+      cfg = COMMUNITIES[c] || null;
+      targets = cfg ? [c] : Object.keys(COMMUNITIES); // no/invalid c -> send to all three
+      klaviyoList = cfg ? cfg.klaviyo : PARENT_KLAVIYO;
+      FORM_KEY = 'suncoast_quick_submitted_' + (c || 'all');
+      var headingEl = q('formHeading');
+      if (headingEl && cfg) headingEl.textContent = 'Contact ' + cfg.label;
+    }
+    resolveCommunity();
+    window.addEventListener('hashchange', resolveCommunity);
+
+    function subscribeKlaviyo(profileAttrs, phoneE164) {
+      try {
+        var profile = Object.assign({}, profileAttrs);
+        var subscriptions = { email: { marketing: { consent: 'SUBSCRIBED' } } };
+        if (phoneE164) { profile.phone_number = phoneE164; }
+        profile.subscriptions = subscriptions;
+        var body = JSON.stringify({ data: { type:'subscription', attributes: {
+          custom_source:'Suncoast Senior Living Website Contact Form',
+          profile: { data: { type:'profile', attributes: profile } }
+        }, relationships: { list: { data: { type:'list', id:klaviyoList } } } } });
+        fetch('https://a.klaviyo.com/client/subscriptions/?company_id=' + KLAVIYO_PUBLIC_KEY, {
+          method:'POST', headers:{ 'Content-Type':'application/json', 'revision':'2024-10-15' }, body:body, keepalive:true
+        }).catch(function(){});
+      } catch (e) {}
+    }
+
+    var isSubmitting = false;
+
+    if (sessionStorage.getItem(FORM_KEY)) {
+      q('submitBtn').disabled = true; q('submitBtn').textContent = 'Already Submitted';
+      q('statusMsg').textContent = '✓ You have already submitted this form. If you need further assistance, please call us.';
+      q('statusMsg').className = 'status success';
+    }
+
+    q('submitBtn').addEventListener('click', function () {
+      if (isSubmitting || sessionStorage.getItem(FORM_KEY)) return;
+      var statusEl = q('statusMsg');
+      statusEl.className = 'status'; statusEl.textContent = '';
+
+      var firstName = q('firstName').value.trim();
+      var lastName  = q('lastName').value.trim();
+      var email     = q('email').value.trim();
+      var message   = q('message').value.trim();
+      var phone     = q('phone').value.replace(/\D/g, '');
+
+      function err(m){ statusEl.textContent = m; statusEl.className = 'status error'; }
+      if (!firstName || !lastName) return err('Please enter your first and last name.');
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return err('Please enter a valid email address.');
+      if (!phone || phone.length < 10) return err('Please enter a valid 10-digit phone number.');
+
+      isSubmitting = true;
+      q('submitBtn').disabled = true; q('submitBtn').textContent = 'Sending…';
+
+      var trafficSrc = params.get('utm_source') || params.get('gclid') || '';
+
+      if (typeof gtag === 'function') {
+        gtag('event', 'generate_lead', { event_category:'Lead Form', event_label:'Suncoast Senior Living – Contact', community:(c || 'all') });
+      }
+
+      var promises = targets.map(function (target) {
+        var t = COMMUNITIES[target];
+        var fd = new FormData();
+        fd.append('APIKEY', APIKEY);
+        fd.append('SNIPPETID', t.snippet);
+        fd.append('SOURCE_NAME', t.source);
+        fd.append('FIRST_NAME', firstName);
+        fd.append('LAST_NAME', lastName);
+        fd.append('EMAIL', email);
+        fd.append('PHONE', phone);
+        fd.append('REASON_FOR_INQUIRY', message || 'Website contact form');
+        fd.append('INTEGRATION_SUBMISSION_LOCATION', window.location.href);
+        if (trafficSrc) fd.append('INTEGRATION_TRAFFIC_SOURCE', trafficSrc);
+        return fetch(API_URL, { method:'POST', body:fd }).then(function (r) {
+          return r.text().then(function (text) { return { ok:r.ok, status:r.status, text:text }; });
+        });
+      });
+
+      Promise.all(promises).then(function (results) {
+        var allOk = results.every(function (resp) {
+          var data = {}; try { data = JSON.parse(resp.text); } catch (e) {}
+          var explicitOk = data.success === 1 || data.success === true || data.success === '1' || data.SUCCESS === 1 || data.SUCCESS === true;
+          var explicitFail = data.success === 0 || data.success === false || !!data.error || !!data.errors;
+          return explicitOk || (resp.ok && !explicitFail);
+        });
+        if (allOk) {
+          sessionStorage.setItem(FORM_KEY, '1');
+          var phoneE164 = phone.length === 10 ? '+1' + phone : null;
+          subscribeKlaviyo({ email:email, first_name:firstName, last_name:lastName }, phoneE164);
+          setTimeout(function () { window.location.href = THANKYOU_URL; }, 400);
+        } else {
+          err('There was a problem submitting your request. Please call us for assistance.');
+          q('submitBtn').disabled = false; q('submitBtn').textContent = 'Send My Request'; isSubmitting = false;
+        }
+      }).catch(function () {
+        err('Something went wrong. Please try again or contact us directly.');
+        q('submitBtn').disabled = false; q('submitBtn').textContent = 'Send My Request'; isSubmitting = false;
+      });
+    });
+
+    // Report height to host page so the embed never clips (see js/main.js).
+    // Measure the content wrapper (not documentElement) so height can shrink
+    // below the iframe's current height instead of getting floored by it.
+    function postHeight() {
+      var wrapper = document.querySelector('.wrapper');
+      var cs = window.getComputedStyle(document.body);
+      var pad = parseFloat(cs.paddingTop || 0) + parseFloat(cs.paddingBottom || 0);
+      var h = wrapper ? Math.ceil(wrapper.getBoundingClientRect().height + pad) : Math.ceil(document.body.scrollHeight);
+      if (window.parent !== window) window.parent.postMessage({ suncoastFormHeight: h }, '*');
+    }
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    ['input','click'].forEach(function (evt) { document.addEventListener(evt, function () { setTimeout(postHeight, 60); }); });
+    if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+    setInterval(postHeight, 1000);
+  })();
+  </script>
+</body>
+</html>
