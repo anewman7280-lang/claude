@@ -63,16 +63,25 @@ with the right `data-start`. Deployed source: `events/wordpress-events-hub.html`
   HTTP 202 (captcha challenge = request didn't reach WordPress; safe to retry).
 - Back up a page's current `content.raw` before overwriting it.
 
-## Open items
+## Live events on the site (verified) & open items
 
-- **Medicare event** (Janet Lambert / Lambert Insurance — Suncoast East, Tue Aug 11,
-  2026, 2:00 PM): PUBLISHED at `/medicare-made-simple/` (page id 2530) + Upcoming card
-  added. Interim RSVP form is East `2416` (reused, approved); swap in a dedicated form
-  when created. Still needs the **flyer** uploaded to Media, then add it as the hero
-  poster and hub card image. Deployed source: `events/wordpress-medicare-made-simple.html`.
-- **Wellness event** (SlimFit — Suncoast East, **Wed, Jul 29, 2026, 2:00 PM**):
-  PUBLISHED at `/wellness-slimfit/` (page id 2528) + Upcoming card added to the hub.
-  Interim RSVP form is East `2416` (reused, approved); swap in a dedicated
-  "Wellness RSVP" form when created. Still needs the **flyer** uploaded to Media, then
-  add it as the hero poster (`.ev-hero` → 2-col with `.poster`) and the hub card image.
-  Deployed source: `events/wordpress-wellness-slimfit.html`.
+The events hub (`/events/`, page 2393) had been flattened by an editor save (all
+`<div>`s + the auto-sort `<script>` stripped) — REBUILT and restored with the full
+structure + auto-sort, all events, and correct Upcoming/Past. Deployed source:
+`events/wordpress-events-hub.html`. Current events:
+
+- **Effective Communication with People with Cognitive Challenges** (Still Alive Inside —
+  Suncoast **House**, Thu Sep 24 2026, 3:30–4:00 PM): PUBLISHED at
+  `/effective-communication/` (page id 2667) + Upcoming card. RSVP form is House `2409`
+  (reused Fall-Prevention form — carries its email + **ECP CRM** lead flow). Flyer not
+  yet uploaded (card uses 💬 placeholder). Source: `events/wordpress-effective-communication.html`.
+- **Medicaid Long-Term Care Benefits** (Suncoast East, Sep 29 2026, 2:00 PM): live at
+  `/medicaid-long-term-care/`, created outside this repo; preserved in the hub (Upcoming).
+- **Wellness event** (SlimFit — Suncoast East, Wed Jul 29 2026): PUBLISHED `/wellness-slimfit/`
+  (id 2528); flyer `wellness-flyer.png` now uploaded & used on the hub card. Form 2416 interim.
+- **Medicare**: TWO pages exist — `/medicare-plans-options/` (id 2544, PUBLISHED, the live
+  one; hub links here, flyer `medicare-flyer.png`) and my `/medicare-made-simple/` (id 2530,
+  **DRAFT, redundant** — consider trashing). Do not publish the draft (would duplicate).
+- Also live: `/todays-hospice/`, `/fall-prevention-virtusense/`, `/dont-get-tricked/`.
+
+Open: upload flyers for the House event (and swap dedicated RSVP forms if wanted).
