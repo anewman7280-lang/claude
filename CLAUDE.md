@@ -60,8 +60,25 @@ with the right `data-start`. Deployed source: `events/wordpress-events-hub.html`
 - Endpoint `https://suncoastsl.com/wp-json/wp/v2/…`, auth via a revocable **Application
   Password** (never the account login). **Do not store credentials in this file or the repo.**
 - Site is behind SiteGround's WAF: send a browser-like `User-Agent` and retry on
-  HTTP 202 (captcha challenge = request didn't reach WordPress; safe to retry).
+  HTTP 202 (captcha challenge = request didn't reach WordPress; safe to retry). Writes
+  (POST/PUT) get challenged harder than reads — grind with a cookie jar + retries.
 - Back up a page's current `content.raw` before overwriting it.
+
+### IMPORTANT — the Events hub (page 2393) is an **Elementor** page
+
+`_elementor_edit_mode` = `builder`, so the FRONT END renders `_elementor_data`, **not**
+`post_content`. Editing `post_content` does nothing visible. The whole `.soc-care` hub
+block lives in ONE Elementor **text-editor widget (id 37189351)** at
+`_elementor_data[0].elements[0].settings.editor`. To update the hub:
+1. GET `?context=edit&_fields=meta`, parse `_elementor_data` (JSON string), replace that
+   widget's `editor` with the new block, PUT `{"meta":{"_elementor_data": "<json string>"}}`.
+2. Keep `post_content` in sync (PUT `content`) so the repo copy matches.
+3. **Flush Elementor's render cache**: `DELETE /wp-json/elementor/v1/cache`.
+4. **Purge SiteGround cache**: `PUT /wp-json/siteground-optimizer/v1/purge-cache` `{}`.
+   (SG also exposes enable/disable-memcache, autoflush-cache, etc. Don't toggle Memcached —
+   disabling it can leave it off until re-enabled in Site Tools → Speed → Caching.)
+5. Verify by fetching the public `/events/` (no auth). Individual event pages are plain
+   `post_content` (not Elementor), so they publish normally and aren't page-cached (new URL).
 
 ## Live events on the site (verified) & open items
 
