@@ -88,10 +88,9 @@ structure + auto-sort, all events, and correct Upcoming/Past. Deployed source:
 `events/wordpress-events-hub.html`. Current events:
 
 - **Effective Communication with People with Cognitive Challenges** (Still Alive Inside —
-  Suncoast **House**, Thu Sep 24 2026, 3:30–4:00 PM): PUBLISHED at
+  Suncoast **House**, **Tue Sep 29 2026, 3:30–4:30 PM** — rescheduled from Thu Sep 24; flyer printed 'Thursday, September 29' but Sep 29 is a Tuesday, so the page uses the corrected weekday): PUBLISHED at
   `/effective-communication/` (page id 2667) + Upcoming card. RSVP form is House `2409`
-  (reused Fall-Prevention form — carries its email + **ECP CRM** lead flow). Flyer not
-  yet uploaded (card uses 💬 placeholder). Source: `events/wordpress-effective-communication.html`.
+  (reused Fall-Prevention form — carries its email + **ECP CRM** lead flow). Flyer uploaded (`effective_communication_suncoast_house_logo.png`, id 2670) and used on hero + card — but that file still shows the OLD Sep 24/4:00 art; to update the image, **Replace media** in place (same URL) then flush caches. Source: `events/wordpress-effective-communication.html`.
 - **Medicaid Long-Term Care Benefits** (Suncoast East, Sep 29 2026, 2:00 PM): live at
   `/medicaid-long-term-care/`, created outside this repo; preserved in the hub (Upcoming).
 - **Wellness event** (SlimFit — Suncoast East, Wed Jul 29 2026): PUBLISHED `/wellness-slimfit/`
