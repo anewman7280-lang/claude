@@ -64,6 +64,20 @@ with the right `data-start`. Deployed source: `events/wordpress-events-hub.html`
   (POST/PUT) get challenged harder than reads — grind with a cookie jar + retries.
 - Back up a page's current `content.raw` before overwriting it.
 
+### IMPORTANT — never grind the WAF (lesson from Sep 9 2026)
+
+SiteGround's Anti-Bot AI **escalates on repeated failed challenges**. Writes worked fine
+from the cloud env with a retry or two (Jul 24/27, Sep 3, Sep 7). On Sep 9 ~300 rapid
+retries chasing one publish got the whole egress range (`160.79.106.0/24`) flagged
+**site-wide** — even the public homepage returned the `sgcaptcha` 202. The flag is
+reputation-based and decays only when traffic stops.
+
+Rules: (1) if a write is challenged, try at most ~10 spaced attempts, then **stop**.
+(2) Back off for **12+ hours** before the next attempt. (3) Gate every retry with one
+unauthenticated homepage GET — if it's 202, don't POST; wait longer. (4) `curl` cannot
+solve the JS challenge, and the container's Chromium can't traverse the proxy to any
+site, so more requests never help — only cooldown does.
+
 ### IMPORTANT — the Events hub (page 2393) is an **Elementor** page
 
 `_elementor_edit_mode` = `builder`, so the FRONT END renders `_elementor_data`, **not**
